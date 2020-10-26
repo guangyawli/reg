@@ -1,0 +1,119 @@
+/*DEMOX styles*/
+/*通用*/
+body.gray{background-color: rgb(233, 236, 243);}
+html {height: 100%;}
+body {min-height: 100%;}
+section{margin-top: 40px;}
+section.clear{margin-top:80px }
+section.bottom{margin-bottom:80px }
+button:focus{outline: none;}
+h2.title{
+    font-weight: 900;
+    margin-bottom: 2px;
+}
+h3.title{
+    font-weight: 900;
+    margin-bottom: 2px;
+    color: #397197;
+    font-size: 20px;
+    margin-top: 20px;
+}
+p.sub_title{
+    font-weight: 600;
+    color: #397197;
+}
+
+.content-box{
+    border-radius: 20px;
+    box-shadow: 3px 2px 5px #d0d3d9;
+    padding: 30px 20px 30px 20px;
+    background-color: white;
+    margin-top: 20px;
+}
+.content-box-no-bgc{
+    margin-top: 20px;
+    padding: 0px 20px 30px 20px;
+}
+.cursor_p{
+    cursor: pointer;
+}
+
+.pni{
+	padding: 0px !important;
+}
+.pr-05{
+	padding-right: 5px;
+}
+.pr-10{
+	padding-right: 10px;
+}
+.pr-15{
+	padding-right: 15px;
+}
+.pr-20{
+	padding-right: 20px;
+}
+
+.pb-05{
+	padding-bottom: 5px;
+}
+.pb-10{
+	padding-bottom: 10px;
+}
+.pb-15{
+	padding-bottom: 15px;
+}
+.pb-20{
+	padding-bottom: 20px;
+}
+
+.ml-05{
+	margin-left: 5px;
+}
+.ml-10{
+	margin-left: 10px;
+}
+.fw7{
+	font-weight: 700;
+}
+.fw8{
+	font-weight: 800;
+}
+.fw9{
+	font-weight: 900;
+}
+
+
+/*idea*/
+/*index*/
+.idea-box{
+  margin:40px auto;
+  font-size:0;
+}
+.idea-title{
+    font-weight: 900;
+    font-size: 30px;
+    vertical-align: text-bottom;s
+}
+
+.idea-place{
+    font-weight: 700;
+    font-size: 16px;
+    vertical-align: text-bottom;
+}
+
+/*youtube*/
+.youtube_container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+}
+.video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+

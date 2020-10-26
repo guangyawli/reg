@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}登入{% endblock  %}
+{% block content %}
+    <section class="bottom" id="table-section">
+        <div class="container">
+            <h2 class="title">登入</h2>
+            <p class="sub_title"></p>
+            <div class="content-box table-responsive">
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <h3 class="title">您還沒有帳號嗎?</h3>
+                        <hr>
+                        <p>請由隊長，前往<a href="{% url 'Register' %}">註冊</a>。</p>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <h3 class="title">如您已經有註冊過，請登入</h3>
+                        <hr>
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            {{ form }}
+
+                            <button class="btn btn-outline-info" type="submit" > 登入 </button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock  %}
