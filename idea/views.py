@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from .forms import TeamDataForm, TeamMember, TeamMemberForm, AddTeamMemberForm, TeamFilesForm
@@ -10,6 +11,7 @@ def index(request):
     return render(request, 'idea/index.html', locals())
 
 
+@login_required
 def file_list(request):
     check_team = Team.objects.filter(leader=request.user).exists()
     if check_team:
@@ -29,6 +31,7 @@ def file_list(request):
     return render(request, 'idea/file_list.html', {'files': files,'video_embed_link':video_embed_link})
 
 
+@login_required
 def show_team(request):
     check_team = Team.objects.filter(leader=request.user)
     if check_team.exists():
@@ -48,6 +51,7 @@ def show_team(request):
     return render(request, 'idea/show_team.html', locals())
 
 
+@login_required
 def add_team(request):
     check_team = Team.objects.filter(leader=request.user)
     if check_team:
@@ -82,6 +86,7 @@ def add_team(request):
     return render(request, 'idea/add_team.html', locals())
 
 
+@login_required
 def modify_team(request):
     check_team = Team.objects.filter(leader=request.user)
     target_team = Team.objects.get(leader=request.user)
@@ -117,6 +122,7 @@ def modify_team(request):
     return render(request, 'idea/add_team.html', locals())
 
 
+@login_required
 def add_member(request):
     target_title = '新增'
     check_team = Team.objects.filter(leader=request.user)
@@ -150,6 +156,7 @@ def add_member(request):
     return render(request, 'idea/add_member.html', locals())
 
 
+@login_required
 def modify_member(request):
     target_title = '修改'
     check_team = Team.objects.filter(leader=request.user)
@@ -179,6 +186,7 @@ def modify_member(request):
     return render(request, 'idea/add_member.html', locals())
 
 
+@login_required
 def del_member(request):
     check_team = Team.objects.filter(leader=request.user)
     target_team = Team.objects.get(leader=request.user)
@@ -192,6 +200,7 @@ def del_member(request):
         return render(request, 'idea/show_team.html', locals())
 
 
+@login_required
 def add_files(request):
     check_team = Team.objects.filter(leader=request.user)
     if not check_team.exists():
