@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .forms import RegisterForm, LoginForm
+from django.contrib import messages
 
 
 def index(request):
@@ -23,15 +24,17 @@ def sign_up(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
+                messages.add_message(request, messages.INFO, '註冊成功')
+                # messages.get_messages(request)
                 return redirect('home')
             else:
-                err_msg = 'register fail'
+                messages.add_message(request, messages.INFO, '註冊失敗')
 
     return render(request, 'accounts/register.html', locals())
 
 
 def sign_in(request):
-    err_msg = ''
+    # err_msg = ''
     form = LoginForm()
     if request.method == "POST":
         username = request.POST.get("username")
@@ -39,10 +42,10 @@ def sign_in(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            err_msg = 'Login pass'
+            messages.add_message(request, messages.INFO, '登入成功')
             return redirect('home')
         else:
-            err_msg = 'Login fail'
+            messages.add_message(request, messages.INFO, '登入失敗')
 
     return render(request, 'accounts/login.html', locals())
 

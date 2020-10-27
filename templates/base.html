@@ -52,7 +52,9 @@
         </div>
     </nav>
     {% block error_content %}
-
+        {% for message in messages %}
+            <div class="alert aler-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
     {% endblock %}
     {% block content %}
     {% endblock %}

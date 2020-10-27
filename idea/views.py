@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect
 
 from .forms import TeamDataForm, TeamMember, TeamMemberForm, AddTeamMemberForm, TeamFilesForm
 from .models import Team
+
+from django.contrib import messages
 # from django.contrib import messages
 # Create your views here.
 
@@ -41,7 +43,7 @@ def show_team(request):
             form = target_team
             real_member_num = target_members.count()
             if real_member_num == 0:
-                error_message = 'no member'
+                messages.add_message(request, messages.INFO, '沒有成員')
         else:
             error_message = 'request.method POST'
 
@@ -71,7 +73,7 @@ def add_team(request):
             # 回傳並顯示
             target_team = Team.objects.get(leader=request.user)
             target_members = TeamMember.objects.filter(team__team_name=target_team.team_name)
-            error_message = '隊伍新增成功'
+            messages.add_message(request, messages.INFO, '異動成功')
             return redirect('show_team')
             # form = TeamDataForm(instance=target_team)
             # real_member_num = target_members.count()
@@ -103,7 +105,7 @@ def modify_team(request):
             t1.player_num = target_members.count()
             t1.save()
             # 回傳並顯示
-            error_message = '隊伍儲存成功'
+            messages.add_message(request, messages.INFO, '隊伍異動成功')
             return redirect('show_team')
             # form = TeamDataForm(instance=target_team)
             # target_members = TeamMember.objects.filter(team__team_name=target_team.team_name)
@@ -115,6 +117,8 @@ def modify_team(request):
                 error_message = mem1.errors
             elif form.errors:
                 error_message = form.errors
+
+            messages.add_message(request, messages.INFO, error_message)
     else:
         form = TeamDataForm(instance=target_team)
         mem1 = TeamMemberForm(instance=target_members[0])
@@ -139,20 +143,23 @@ def add_member(request):
 
             member_count = target_members.count()
             if member_count < 5:
-                error_message = '新增隊員成功,請輸入下一筆隊員資料'
+                error_message = '新增成功'
+                # messages.add_message(request, messages.INFO, error_message)
             else:
                 error_message = '隊伍成員已滿'
+            messages.add_message(request, messages.INFO, error_message)
             return redirect('show_team')
         else:
             print('!!!! add_member error !!!')
             error_message = mem2.errors
+            messages.add_message(request, messages.INFO, error_message)
     else:
         member_count = target_members.count()
         if member_count < 5:
             mem1 = AddTeamMemberForm()
         else:
             error_message = '隊員名額已滿'
-
+            messages.add_message(request, messages.INFO, error_message)
     return render(request, 'idea/add_member.html', locals())
 
 
@@ -182,6 +189,7 @@ def modify_member(request):
             else:
                 print('!!!! modify_member error !!!')
                 error_message = mem2.errors
+                messages.add_message(request, messages.INFO, error_message)
 
     return render(request, 'idea/add_member.html', locals())
 
@@ -193,10 +201,13 @@ def del_member(request):
     target_mem = TeamMember.objects.get(team__team_name=target_team.team_name, id=request.POST.get('btn_target_name'))
     if check_team and target_mem:
         target_mem.delete()
+        error_message = '刪除成功'
+        messages.add_message(request, messages.INFO, error_message)
         return redirect('show_team')
     else:
         error_message = '隊伍刪除失敗'
         error_link = 'show_team'
+        messages.add_message(request, messages.INFO, error_message)
         return render(request, 'idea/show_team.html', locals())
 
 
@@ -211,6 +222,8 @@ def add_files(request):
             post_form = TeamFilesForm(request.POST, request.FILES, instance=target_team)
             if post_form.is_valid():
                 post_form.save()
+                error_message = '儲存成功'
+                messages.add_message(request, messages.INFO, error_message)
                 return redirect('file_list')
                 # 回傳並顯示
                 # error_message = '檔案儲存成功'
@@ -228,6 +241,7 @@ def add_files(request):
                 print('!!!! add_files error !!!')
                 if post_form.errors:
                     error_message = post_form.errors
+                messages.add_message(request, messages.INFO, error_message)
         else:
             post_form = TeamFilesForm(instance=target_team, initial={})
 

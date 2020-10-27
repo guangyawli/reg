@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 {% block title %}我的資料{% endblock  %}
-{% block error_content %}
-    <div class="container-fluid">
-        {% if error_message %}
-            <div>{{ error_message }}</div>
-        {% endif %}
-        {% if error_link %}
-            <p>Please click <a href="{% url error_link %}">here</a>
-        {% endif %}
-    </div>
-{% endblock %}
+{#{% block error_content %}#}
+{#    <div class="container-fluid">#}
+{#        {% if error_message %}#}
+{#            <div>{{ error_message }}</div>#}
+{#        {% endif %}#}
+{#        {% if error_link %}#}
+{#            <p>Please click <a href="{% url error_link %}">here</a>#}
+{#        {% endif %}#}
+{#    </div>#}
+{#{% endblock %}#}
 {% block content %}
     <section class="bottom" id="table-section">
         <div class="container">
