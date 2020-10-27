@@ -5,7 +5,6 @@ from .forms import TeamDataForm, TeamMember, TeamMemberForm, AddTeamMemberForm, 
 from .models import Team
 
 from django.contrib import messages
-# from django.contrib import messages
 # Create your views here.
 
 
@@ -58,6 +57,7 @@ def add_team(request):
     check_team = Team.objects.filter(leader=request.user)
     if check_team:
         error_message = 'Team is exist'
+        messages.add_message(request, messages.INFO, '隊伍已存在')
         return redirect('show_team')
 
     if request.method == "POST":
@@ -80,7 +80,11 @@ def add_team(request):
             # return render(request, 'idea/show_team.html', locals())
         else:
             print('!!!! error add_team !!!')
-            error_message = mem1.errors
+            if mem1.errors:
+                error_message = mem1.errors
+            elif form.errors:
+                error_message = form.errors
+            messages.add_message(request, messages.INFO, error_message)
     else:
         form = TeamDataForm(initial={'leader': request.user})
         mem1 = TeamMemberForm()
@@ -107,10 +111,7 @@ def modify_team(request):
             # 回傳並顯示
             messages.add_message(request, messages.INFO, '隊伍異動成功')
             return redirect('show_team')
-            # form = TeamDataForm(instance=target_team)
-            # target_members = TeamMember.objects.filter(team__team_name=target_team.team_name)
-            # real_member_num = target_members.count()
-            # return render(request, 'idea/show_team.html', locals())
+
         else:
             print('!!!! modify_team error !!!')
             if mem1.errors:
@@ -225,18 +226,6 @@ def add_files(request):
                 error_message = '儲存成功'
                 messages.add_message(request, messages.INFO, error_message)
                 return redirect('file_list')
-                # 回傳並顯示
-                # error_message = '檔案儲存成功'
-                # check_team = Team.objects.filter(leader=request.user).exists()
-                # if check_team:
-                #     target_team = Team.objects.get(leader=request.user)
-                #     if target_team.readme or target_team.video_link or target_team.affidavit:
-                #         files = target_team
-                #     else:
-                #         files = None
-                # else:
-                #     files = None
-                # return render(request, 'idea/file_list.html', {'files': files})
             else:
                 print('!!!! add_files error !!!')
                 if post_form.errors:
