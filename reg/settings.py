@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'accounts',
     'projects',
     'idea',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
@@ -139,3 +140,17 @@ STATICFILES_DIRS = (
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+# EMAIL setting
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+# EMAIL_HOST = 'mail.gandi.net'
+EMAIL_PORT = 587
+# EMAIL_HOST_USER = 'admin@twshop.asia'
+# EMAIL_HOST_PASSWORD = '[Test]'
+DEFAULT_FROM_EMAIL = '推動大學程式設計教學 <admin@coding101.tw>'
+
+# ckeditor settings
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_IMAGE_BACKEND = "pillow"
+CKEDITOR_JQUERY_URL = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'

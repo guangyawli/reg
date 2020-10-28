@@ -29,7 +29,7 @@ def file_list(request):
     else:
         return redirect('add_team')
 
-    return render(request, 'idea/file_list.html', {'files': files,'video_embed_link':video_embed_link})
+    return render(request, 'idea/file_list.html', {'files': files, 'video_embed_link': video_embed_link})
 
 
 @login_required
@@ -75,11 +75,8 @@ def add_team(request):
             target_members = TeamMember.objects.filter(team__team_name=target_team.team_name)
             messages.add_message(request, messages.INFO, '異動成功')
             return redirect('show_team')
-            # form = TeamDataForm(instance=target_team)
-            # real_member_num = target_members.count()
-            # return render(request, 'idea/show_team.html', locals())
         else:
-            print('!!!! error add_team !!!')
+            error_message = '!!!! error add_team !!!'
             if mem1.errors:
                 error_message = mem1.errors
             elif form.errors:
@@ -113,7 +110,7 @@ def modify_team(request):
             return redirect('show_team')
 
         else:
-            print('!!!! modify_team error !!!')
+            error_message = '!!!! modify_team error !!!'
             if mem1.errors:
                 error_message = mem1.errors
             elif form.errors:
@@ -227,7 +224,7 @@ def add_files(request):
                 messages.add_message(request, messages.INFO, error_message)
                 return redirect('file_list')
             else:
-                print('!!!! add_files error !!!')
+                error_message = '!!!! add_files error !!!'
                 if post_form.errors:
                     error_message = post_form.errors
                 messages.add_message(request, messages.INFO, error_message)
@@ -235,4 +232,3 @@ def add_files(request):
             post_form = TeamFilesForm(instance=target_team, initial={})
 
         return render(request, 'idea/file_list.html', locals())
-

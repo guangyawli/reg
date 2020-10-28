@@ -35,3 +35,26 @@ class LoginForm(forms.Form):
         label="密碼",
         widget=forms.PasswordInput(attrs={'class': 'form-control'})
     )
+
+
+class ResetRequestForm(forms.Form):
+    username = forms.CharField(
+        label="重置帳號",
+        widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'reset_account'})
+    )
+
+
+class ResetPwdForm(UserCreationForm):
+    password1 = forms.CharField(
+        label="輸入新密碼",
+        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+    )
+    password2 = forms.CharField(
+        label="密碼確認",
+        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+    )
+
+    class Meta:
+        model = User
+        fields = ('password1', 'password2')
+        exclude = ('username', 'email',)
