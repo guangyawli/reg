@@ -41,7 +41,7 @@ def sign_up(request):
                 tprofile.save()
             else:
                 err_msg = '該帳號已有啟用碼'
-                messages.add_message(request, messages.INFO, err_msg)
+                messages.add_message(request, messages.ERROR, err_msg)
                 return redirect('home')
 
             tmp_server = MailServer.objects.get(id=1)
@@ -54,7 +54,7 @@ def sign_up(request):
 
             target_mails = []
             # target_mails.append('gyli@mail.fcu.edu.tw')
-            target_mails.append(emailxyaw)
+            target_mails.append(email)
             # print(target_mails)
             # print(courses.course_id)
             # logging.debug(str(target_mails) + str(datetime.now()))
@@ -83,11 +83,12 @@ def sign_up(request):
 
             conn.close()
 
-            err_msg = '請至註冊信箱收信並點選信中連結啟用帳號'
-            messages.add_message(request, messages.INFO, err_msg)
+            err_msg = '請至註冊信箱：'+email + ' 收信並點選信中連結啟用帳號'
+            messages.add_message(request, messages.ERROR, err_msg)
             return redirect('home')
         else:
-            messages.add_message(request, messages.INFO, '註冊失敗，請重新註冊')
+            err_msg = form.errors
+            messages.add_message(request, messages.ERROR, err_msg)
             # messages.get_messages(request)
             return redirect('Register')
 
@@ -105,20 +106,20 @@ def sign_in(request):
         if user is not None:
             login(request, user)
             if request.user.is_active:
-                messages.add_message(request, messages.INFO, '登入成功')
+                messages.add_message(request, messages.SUCCESS, '登入成功')
                 return redirect('home')
             else:
                 logout(request, user)
                 messages.add_message(request, messages.INFO, '請前往註冊信箱，並點擊註冊信連結啟用帳號')
         else:
-            messages.add_message(request, messages.INFO, '登入失敗，帳號未啟用或無此帳號')
+            messages.add_message(request, messages.ERROR, '登入失敗，帳號未啟用或無此帳號')
 
     return render(request, 'accounts/login.html', locals())
 
 
 def log_out(request):
     logout(request)
-    messages.add_message(request, messages.INFO, '登出成功')
+    messages.add_message(request, messages.SUCCESS, '登出成功')
     return redirect('home')
 
 
@@ -127,15 +128,15 @@ def activate_user(request, active_key, token):
     try:
         user = User.objects.get(username=active_key, userprofile__check_code=token)
     except User.DoesNotExist:
-        messages.add_message(request, messages.INFO, '該帳號不存在，請重新註冊')
+        messages.add_message(request, messages.ERROR, '該帳號不存在，請重新註冊')
         return redirect('Register')
     if user.is_active:
-        messages.add_message(request, messages.INFO, '帳號已啟用')
+        messages.add_message(request, messages.SUCCESS, '帳號已啟用')
         return redirect('Login')
     else:
         user.is_active = True
         user.save()
-        messages.add_message(request, messages.INFO, '啟用成功')
+        messages.add_message(request, messages.SUCCESS, '啟用成功')
         return redirect('Login')
 
 
@@ -193,7 +194,7 @@ def request_reset(request):
             else:
                 messages.add_message(request, messages.INFO, '請先至註冊信箱啟用該帳號')
         except User.DoesNotExist:
-            messages.add_message(request, messages.INFO, '該帳號不存在')
+            messages.add_message(request, messages.ERROR, '該帳號不存在')
 
         return redirect('request_reset')
 
@@ -216,11 +217,11 @@ def reset_user(request, active_key, token):
                 user.set_password(password)
                 user.save()
                 err_msg = '密碼重置成功'
-                messages.add_message(request, messages.INFO, err_msg)
+                messages.add_message(request, messages.SUCCESS, err_msg)
                 return redirect('Login')
             else:
                 err = rform.errors
-                messages.add_message(request, messages.INFO, err)
+                messages.add_message(request, messages.ERROR, err)
                 return redirect("reset_user", active_key=active_key, token=token)
         else:
             context = {
@@ -229,5 +230,5 @@ def reset_user(request, active_key, token):
             }
             return render(request, 'accounts/enter_reset.html', context)
     except User.DoesNotExist:
-        messages.add_message(request, messages.INFO, '該帳號不存在')
+        messages.add_message(request, messages.ERROR, '該帳號不存在')
         return redirect('request_reset')
