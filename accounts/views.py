@@ -53,7 +53,8 @@ def sign_up(request):
             conn.open()
 
             target_mails = []
-            target_mails.append('gyli@mail.fcu.edu.tw')
+            # target_mails.append('gyli@mail.fcu.edu.tw')
+            target_mails.append(email)
             # print(target_mails)
             # print(courses.course_id)
             # logging.debug(str(target_mails) + str(datetime.now()))
@@ -159,7 +160,8 @@ def request_reset(request):
                 conn.open()
 
                 target_mails = []
-                target_mails.append('gyli@mail.fcu.edu.tw')
+                # target_mails.append('gyli@mail.fcu.edu.tw')
+                target_mails.append(user.email)
                 # print(target_mails)
                 # print(courses.course_id)
                 # logging.debug(str(target_mails) + str(datetime.now()))

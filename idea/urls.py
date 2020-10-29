@@ -1,5 +1,6 @@
 from django.urls import path, include
-from idea.views import index, file_list, show_team, add_team, add_member, modify_team, modify_member, add_files, del_member
+from idea.views import index, file_list, show_team, add_team, add_member, modify_team, modify_member, add_files, \
+    del_member
 
 
 urlpatterns = [
