@@ -58,3 +58,10 @@ class ResetPwdForm(UserCreationForm):
         model = User
         fields = ('password1', 'password2')
         exclude = ('username', 'email',)
+
+
+class ResendConfirmForm(forms.Form):
+    username = forms.CharField(
+        label="請輸入帳號",
+        widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'resend_confirm'})
+    )

@@ -6,13 +6,37 @@
             <h2 class="title">註冊</h2>
             <p class="sub_title"></p>
             <div class="content-box table-responsive">
-                <form action="" method="POST">
-                    {% csrf_token %}
-                    {{ form }}
-                    <button class="btn btn-outline-info" type="submit" >註冊 </button>
-                </form>
-                <hr>
-                <h3 class="title">如您已經有註冊過，請前往 <a href="{% url 'Login' %}">登入</a></h3>
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <h3 class="title"><i class="fas fa-exclamation-circle"></i>注意事項</h3>
+                        <hr>
+                        <div class="container">
+                            <p class="sub_title">資格</p>
+                            本競賽之目的在鼓勵非資訊領域科系學習程式設計的在學大學生，故資格限定如下：
+                            <ul>
+                               <li>以團隊方式進行，每隊報名人數為二至五人，需指導教授一名。</li>
+                               <li>108 學年度下學期 或 109學年度上學期有修習過或正在修習程式設計入門課程之非資訊相關科系學生。</li>
+                            </ul>
+
+                            <p class="sub_title">競賽聲明</p>
+                            請詳閱<a href="https://sites.google.com/mail.fcu.edu.tw/2021coding101/rules?authuser=0">注意事項</a>並了解所有競賽規則，
+                            在您註冊那一刻起，代表您已同意所有競賽規則。
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <h3 class="title">開始註冊</h3>
+                        <hr>
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            {{ form }}
+                            <button class="btn btn-outline-info" type="submit" >註冊 </button>
+                        </form>
+                    </div>
+                    <div class="col-12">
+                        <hr>
+                        <h3 class="title">如您已經有註冊過，請前往 <a href="{% url 'Login' %}">登入</a></h3>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

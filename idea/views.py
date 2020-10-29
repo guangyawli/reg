@@ -57,7 +57,7 @@ def add_team(request):
     check_team = Team.objects.filter(leader=request.user)
     if check_team:
         error_message = 'Team is exist'
-        messages.add_message(request, messages.INFO, '隊伍已存在')
+        messages.add_message(request, messages.ERROR, '隊伍已存在')
         return redirect('show_team')
 
     if request.method == "POST":
@@ -73,15 +73,21 @@ def add_team(request):
             # 回傳並顯示
             target_team = Team.objects.get(leader=request.user)
             target_members = TeamMember.objects.filter(team__team_name=target_team.team_name)
-            messages.add_message(request, messages.INFO, '異動成功')
+            messages.add_message(request, messages.SUCCESS, '異動成功')
             return redirect('show_team')
         else:
             error_message = '!!!! error add_team !!!'
             if mem1.errors:
-                error_message = mem1.errors
+                err_msg = [(k, v[0]) for k, v in mem1.errors.items()]
+                for i in range(len(err_msg)):
+                    messages.add_message(request, messages.ERROR, err_msg[i][1])
+                # error_message = mem1.errors
             elif form.errors:
-                error_message = form.errors
-            messages.add_message(request, messages.INFO, error_message)
+                err_msg = [(k, v[0]) for k, v in form.errors.items()]
+                for i in range(len(err_msg)):
+                    messages.add_message(request, messages.ERROR, err_msg[i][1])
+                # error_message = form.errors
+            # messages.add_message(request, messages.INFO, error_message)
     else:
         form = TeamDataForm(initial={'leader': request.user})
         mem1 = TeamMemberForm()
@@ -106,17 +112,20 @@ def modify_team(request):
             t1.player_num = target_members.count()
             t1.save()
             # 回傳並顯示
-            messages.add_message(request, messages.INFO, '隊伍異動成功')
+            messages.add_message(request, messages.SUCCESS, '隊伍異動成功')
             return redirect('show_team')
 
         else:
             error_message = '!!!! modify_team error !!!'
             if mem1.errors:
-                error_message = mem1.errors
+                err_msg = [(k, v[0]) for k, v in mem1.items()]
+                for i in range(len(err_msg)):
+                    messages.add_message(request, messages.ERROR, err_msg[i][1])
             elif form.errors:
-                error_message = form.errors
+                err_msg = [(k, v[0]) for k, v in form.errors.items()]
+                for i in range(len(err_msg)):
+                    messages.add_message(request, messages.ERROR, err_msg[i][1])
 
-            messages.add_message(request, messages.INFO, error_message)
     else:
         form = TeamDataForm(instance=target_team)
         mem1 = TeamMemberForm(instance=target_members[0])
@@ -142,22 +151,32 @@ def add_member(request):
             member_count = target_members.count()
             if member_count < 5:
                 error_message = '新增成功'
-                # messages.add_message(request, messages.INFO, error_message)
+                messages.add_message(request, messages.SUCCESS, error_message)
             else:
                 error_message = '隊伍成員已滿'
-            messages.add_message(request, messages.INFO, error_message)
+                messages.add_message(request, messages.ERROR, error_message)
             return redirect('show_team')
         else:
             print('!!!! add_member error !!!')
-            error_message = mem2.errors
-            messages.add_message(request, messages.INFO, error_message)
+            err_msg = [(k, v[0]) for k, v in mem2.errors.items()]
+            for i in range(len(err_msg)):
+                messages.add_message(request, messages.ERROR, err_msg[i][1])
+            member_count = target_members.count()
+            if member_count < 5:
+                mem1 = AddTeamMemberForm(initial={'member_name': request.POST['member_name'],
+                                                  'school_name': request.POST['school_name'],
+                                                  'department_name': request.POST['department_name'],
+                                                  'department_grade': request.POST['department_grade'],
+                                                  'phone_number': request.POST['phone_number'],
+                                                  'email_addr': request.POST['email_addr']
+                                                  })
     else:
         member_count = target_members.count()
         if member_count < 5:
             mem1 = AddTeamMemberForm()
         else:
             error_message = '隊員名額已滿'
-            messages.add_message(request, messages.INFO, error_message)
+            messages.add_message(request, messages.ERROR, error_message)
     return render(request, 'idea/add_member.html', locals())
 
 
@@ -186,8 +205,9 @@ def modify_member(request):
                 return redirect('show_team')
             else:
                 print('!!!! modify_member error !!!')
-                error_message = mem2.errors
-                messages.add_message(request, messages.INFO, error_message)
+                err_msg = [(k, v[0]) for k, v in mem2.errors.items()]
+                for i in range(len(err_msg)):
+                    messages.add_message(request, messages.ERROR, err_msg[i][1])
 
     return render(request, 'idea/add_member.html', locals())
 
@@ -200,12 +220,12 @@ def del_member(request):
     if check_team and target_mem:
         target_mem.delete()
         error_message = '刪除成功'
-        messages.add_message(request, messages.INFO, error_message)
+        messages.add_message(request, messages.SUCCESS, error_message)
         return redirect('show_team')
     else:
         error_message = '隊伍刪除失敗'
         error_link = 'show_team'
-        messages.add_message(request, messages.INFO, error_message)
+        messages.add_message(request, messages.ERROR, error_message)
         return render(request, 'idea/show_team.html', locals())
 
 
@@ -221,13 +241,16 @@ def add_files(request):
             if post_form.is_valid():
                 post_form.save()
                 error_message = '儲存成功'
-                messages.add_message(request, messages.INFO, error_message)
+                messages.add_message(request, messages.SUCCESS, error_message)
                 return redirect('file_list')
             else:
                 error_message = '!!!! add_files error !!!'
                 if post_form.errors:
-                    error_message = post_form.errors
-                messages.add_message(request, messages.INFO, error_message)
+                    err_msg = [(k, v[0]) for k, v in post_form.errors.items()]
+                    for i in range(len(err_msg)):
+                        messages.add_message(request, messages.ERROR, err_msg[i][1])
+                else:
+                    messages.add_message(request, messages.INFO, error_message)
         else:
             post_form = TeamFilesForm(instance=target_team, initial={})
 

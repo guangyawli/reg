@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from accounts.views import index, sign_up, sign_in, log_out, my_profile, activate_user, request_reset, reset_user
+from accounts.views import index, sign_up, sign_in, log_out, my_profile, activate_user, request_reset, reset_user,\
+    resend_active_letter
 
 urlpatterns = [
     path('', index, name='account_home'),
@@ -26,4 +27,5 @@ urlpatterns = [
     path('activate/<str:active_key>/<str:token>/', activate_user, name='activate_user'),
     path('reset_request/', request_reset, name='request_reset'),
     path('reset_password/<str:active_key>/<str:token>/', reset_user, name='reset_user'),
+    path('resend_confirm/', resend_active_letter, name='resend_active_letter'),
 ]
