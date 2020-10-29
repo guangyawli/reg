@@ -54,7 +54,7 @@ def sign_up(request):
 
             target_mails = []
             # target_mails.append('gyli@mail.fcu.edu.tw')
-            target_mails.append(email)
+            target_mails.append(emailxyaw)
             # print(target_mails)
             # print(courses.course_id)
             # logging.debug(str(target_mails) + str(datetime.now()))
