@@ -10,7 +10,7 @@ class RegisterForm(UserCreationForm):
     )
     email = forms.EmailField(
         label="電子郵件",
-        widget=forms.EmailInput(attrs={'class': 'form-control'})
+        widget=forms.EmailInput(attrs={'class': 'form-control'}),
     )
     password1 = forms.CharField(
         label="密碼",
@@ -24,6 +24,13 @@ class RegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2')
+
+    def clean_email(self):
+        user_id = self.cleaned_data['user'].id
+        email = self.cleaned_data['email']
+        obj = User.objects.filter(email=email).exclude(id=user_id)
+        if obj:
+            raise forms.ValidationError('此信箱已註冊')
 
 
 class LoginForm(forms.Form):
