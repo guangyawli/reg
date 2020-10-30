@@ -31,6 +31,8 @@ class RegisterForm(UserCreationForm):
         obj = User.objects.filter(email=email).exclude(username=user_name)
         if obj:
             raise forms.ValidationError('此信箱已註冊')
+        else:
+            return email
 
 
 class LoginForm(forms.Form):

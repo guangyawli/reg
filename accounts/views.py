@@ -143,10 +143,10 @@ def sign_in(request):
                         messages.add_message(request, messages.ERROR, '密碼錯誤')
                     else:
                         messages.add_message(request, messages.ERROR, '帳號未啟用，請至註冊信箱收取認證信')
+                    return redirect('Login')
                 except User.DoesNotExist:
                     messages.add_message(request, messages.ERROR, '無此帳號')
-
-                return redirect('Login')
+                    return redirect('Login')
 
         return render(request, 'accounts/login.html', locals())
 
