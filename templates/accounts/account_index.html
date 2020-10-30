@@ -15,14 +15,15 @@
                               <p class="sub_title">{{ form.team_topic }}</p>
                           </div>
                           <div class="col-12 col-md-4">
-                              <h3 class="title">隊伍成員
-                                  {% if target_members %}
-                                  <i class="fas fa-check-circle" style="color:mediumseagreen"></i>
-                                  {% else %}
-                                  <i class="fas fa-times-circle" style="color: lightcoral"></i>
-                                  {% endif %}
-                              </h3>
+                                <h3 class="title" style="cursor: pointer" onclick="javascript:location.href='{% url 'show_team' %}'">隊伍成員
+                                      {% if target_members %}
+                                      <i class="fas fa-check-circle" style="color:mediumseagreen"></i>
+                                      {% else %}
+                                      <i class="fas fa-times-circle" style="color: lightcoral"></i>
+                                      {% endif %}
+                                </h3>
                                <hr>
+                                <p class="sub_title" style="cursor: pointer;text-decoration:underline;	" onclick="javascript:location.href='{% url 'show_team' %}'">點此前往編輯</p>
                               {% if target_members %}
                                 {% for target_member in target_members %}
                                     <h5><span class="badge badge-info">
@@ -37,51 +38,54 @@
                           </div>
                           <div class="col-12 col-md-4">
                               <h3 class="title">競賽文件
-                                  {% if target_team.affidavit and target_team.video_link and target_team.readme%}
-                                  <i class="fas fa-check-circle" style="color:mediumseagreen"></i>
-                                  {% else %}
-                                  <i class="fas fa-times-circle" style="color: lightcoral"></i>
-                                  {% endif %}
+{#                                  {% if target_team.affidavit and target_team.video_link and target_team.readme%}#}
+{#                                  <i class="fas fa-check-circle" style="color:mediumseagreen"></i>#}
+{#                                  {% else %}#}
+{#                                  <i class="fas fa-times-circle" style="color: lightcoral"></i>#}
+{#                                  {% endif %}#}
                               </h3>
                               <hr>
-                              <h5>
-                                  <span class="badge badge-info">競賽切結書</span>
-                                  {% if target_team.affidavit %}
-                                  <i class="fas fa-check-circle" style="color:mediumseagreen"></i>
-                                  {% else %}
-                                  <i class="fas fa-times-circle" style="color: lightcoral"></i>
-                                  {% endif %}
-                              </h5>
-                              <h5>
-                                  <span class="badge badge-info">Youtube影片</span>
-                                  {% if target_team.video_link %}
-                                  <i class="fas fa-check-circle" style="color:mediumseagreen"></i>
-                                  {% else %}
-                                  <i class="fas fa-times-circle" style="color: lightcoral"></i>
-                                  {% endif %}
-                              </h5>
-                              <h5>
-                                  <span class="badge badge-info">作品說明書</span>
-                                  {% if target_team.readme %}
-                                  <i class="fas fa-check-circle" style="color:mediumseagreen"></i>
-                                  {% else %}
-                                  <i class="fas fa-times-circle" style="color: lightcoral"></i>
-                                  {% endif %}
-                              </h5>
+                              <p class="sub_title">12/17開放上傳</p>
+{#                              <h5>#}
+{#                                  <span class="badge badge-info">競賽切結書</span>#}
+{#                                  {% if target_team.affidavit %}#}
+{#                                  <i class="fas fa-check-circle" style="color:mediumseagreen"></i>#}
+{#                                  {% else %}#}
+{#                                  <i class="fas fa-times-circle" style="color: lightcoral"></i>#}
+{#                                  {% endif %}#}
+{#                              </h5>#}
+{#                              <h5>#}
+{#                                  <span class="badge badge-info">Youtube影片</span>#}
+{#                                  {% if target_team.video_link %}#}
+{#                                  <i class="fas fa-check-circle" style="color:mediumseagreen"></i>#}
+{#                                  {% else %}#}
+{#                                  <i class="fas fa-times-circle" style="color: lightcoral"></i>#}
+{#                                  {% endif %}#}
+{#                              </h5>#}
+{#                              <h5>#}
+{#                                  <span class="badge badge-info">作品說明書</span>#}
+{#                                  {% if target_team.readme %}#}
+{#                                  <i class="fas fa-check-circle" style="color:mediumseagreen"></i>#}
+{#                                  {% else %}#}
+{#                                  <i class="fas fa-times-circle" style="color: lightcoral"></i>#}
+{#                                  {% endif %}#}
+{#                              </h5>#}
                           </div>
                            <div class="col-12 col-md-4">
                               <h3 class="title">競賽結果</h3>
                               <hr>
-                          </div>
-                          <div class="col-8 h"style="margin-top: 50px">
+                              <p class="sub_title">尚未公布</p>
+                           </div>
+                          {% complete target_members target_team.affidavit target_team.video_link target_team.readme as complete_rate  %}
+                          {% if complete_rate != 0 %}
+                          <div class="col-8 d-none d-md-block d-lg-block " style="margin-top: 50px">
                               <div class="progress">
-                                  {% complete target_members target_team.affidavit target_team.video_link target_team.readme as complete_rate  %}
-                                  <div id="complete-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:{{ complete_rate }}%">
+                                  <div id="complete-bar" class="progress-bar bg-success" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:{{ complete_rate }}%">
                                       {{ complete_rate }}%
                                   </div>
                               </div>
                           </div>
-                      </div>
+                          {% endif %}
                   </div>
             </div>
         </div>

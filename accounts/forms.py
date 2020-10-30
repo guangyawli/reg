@@ -10,7 +10,7 @@ class RegisterForm(UserCreationForm):
     )
     email = forms.EmailField(
         label="電子郵件",
-        widget=forms.EmailInput(attrs={'class': 'form-control'}),
+        widget=forms.EmailInput(attrs={'class': 'form-control'})
     )
     password1 = forms.CharField(
         label="密碼",

@@ -111,7 +111,7 @@ def sign_up(request):
                 for i in range(len(err_msg)):
                     messages.add_message(request, messages.ERROR, err_msg[i][1])
                 # messages.get_messages(request)
-                return redirect('Register')
+                # return redirect('Register')
 
         return render(request, 'accounts/register.html', locals())
 
