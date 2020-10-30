@@ -26,9 +26,9 @@ class RegisterForm(UserCreationForm):
         fields = ('username', 'email', 'password1', 'password2')
 
     def clean_email(self):
-        user_id = self.cleaned_data['user'].id
+        user_name = self.cleaned_data['username']
         email = self.cleaned_data['email']
-        obj = User.objects.filter(email=email).exclude(id=user_id)
+        obj = User.objects.filter(email=email).exclude(username=user_name)
         if obj:
             raise forms.ValidationError('此信箱已註冊')
 
