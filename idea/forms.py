@@ -22,7 +22,7 @@ class TeamDataForm(forms.ModelForm):
 class TeamMemberForm(forms.ModelForm):
     class Meta:
         model = TeamMember
-        exclude = ['team']
+        exclude = ['team', 'player_num']
         widgets = {
             'member_name': forms.TextInput(attrs={'class': 'form-control', 'required': 'required'}),
             'school_name': forms.TextInput(attrs={'class': 'form-control', 'required': 'required'}),
@@ -30,7 +30,7 @@ class TeamMemberForm(forms.ModelForm):
             'department_grade': forms.TextInput(attrs={'class': 'form-control'}),
             'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
             'email_addr': forms.EmailInput(attrs={'class': 'form-control', 'required': 'required'}),
-            'player_num': forms.NumberInput(attrs={'class': 'form-control', 'id': "player_num"}),
+            # 'player_num': forms.NumberInput(attrs={'class': 'form-control', 'id': "player_num"}),
         }
 
     def clean_department_grade(self):
