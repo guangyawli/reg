@@ -1,7 +1,12 @@
 from django.contrib import admin
 from accounts.models import MailServer, Emails, UserProfile
+from django.contrib.auth.models import User
 
 # Register your models here.
+
+
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('username', 'email', 'date_joined')
 
 
 class UserProfileAdmin(admin.ModelAdmin):
@@ -19,3 +24,5 @@ class MailServerAdmin(admin.ModelAdmin):
 admin.site.register(Emails, EmailsAdmin)
 admin.site.register(MailServer, MailServerAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
