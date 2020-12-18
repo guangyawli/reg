@@ -40,6 +40,9 @@
                     <a class="dropdown-item" href="{% url  'account_home' %}">隊伍首頁</a>
                     <a class="dropdown-item" href="{% url  'show_team' %}">編輯隊伍</a>
                     <a class="dropdown-item" href="{% url  'file_list' %}">編輯作品</a>
+                    {% if request.user.judgerprofile.check_judger or request.user.is_superuser%}
+                    <a class="dropdown-item" href="{% url  'judge_list' %}">作品審查</a>
+                    {% endif %}
                     <a class="dropdown-item" href="{% url  'Logout' %}">登出</a>
                 </div>
               </li>

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}審查隊伍{% endblock  %}
+{% block STYLEcontent %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf_viewer.min.css" />
+    <style>
+    .nav-link.active {
+        background-color: white !important;
+    }
+    .nav-link.active span{
+        background-color: #17a2b8 !important;
+    }
+    .nav-link:hover span{
+        background-color: #17a2b8 !important;
+    }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+    <div class="row">
+        <div class="col-md-8 mt-3 left">
+            {% for target_team in target_teams %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">{{ target_team.team_name }}</h2>
+                    <p class="card-text">{{target_team.team_topic|slice:":200" }}</p>
+                    <a href="http://{{ coding101_url }}/projects/judge_detail/{{ target_team.id }}/" class="btn btn-primary">Judge Team</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock  %}
+
+{% block JScontent %}
+{% endblock %}
+

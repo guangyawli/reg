@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}審查作品{% endblock  %}
+{% block STYLEcontent %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf_viewer.min.css" />
+    <style>
+    .nav-link.active {
+        background-color: white !important;
+    }
+    .nav-link.active span{
+        background-color: #17a2b8 !important;
+    }
+    .nav-link:hover span{
+        background-color: #17a2b8 !important;
+    }
+    </style>
+{% endblock %}
+{% block error_content %}
+
+{% endblock %}
+{% block content %}
+      <section class="bottom" id="table-section">
+        <div class="container">
+            <h2 class="title">審查作品</h2>
+            <p class="sub_title">{{ files.team_name }}</p>
+            <p class="sub_title">{{ files.team_topic }}</p>
+            <p class="sub_title">{{ id_list }}</p>
+            <div class="content-box table-responsive">
+                <button onclick="url_to_prev()">上一隊</button>
+                <button onclick="url_to_next()">下一隊</button>
+    
+            </div>
+            <div class="content-box table-responsive">
+                <div class="row">
+                    <div class="col-12 col-md-3">
+                        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                          <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">
+                              <h5><span class="badge badge-secondary">作品說明書/競賽切結書</span></h5>
+                          </a>
+                          <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">
+                              <h5><span class="badge badge-secondary">作品影片</span></h5>
+                          </a>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-9">
+                        <div class="tab-content" id="v-pills-tabContent">
+                          <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                              <span class="badge badge-secondary">作品說明書</span>
+                              {% if files.readme  %}
+                              <div class="page_title fw9" id="pdf-box">
+                                    <canvas id="pdf1_canvas"></canvas>
+                              </div>
+                              {% else %}
+                                  <p class="sub_title">隊伍未上傳作品說明書</p>
+                              {% endif %}
+                              <span class="badge badge-secondary">競賽切結書</span>
+                              {% if files.affidavit %}
+                                    <div class="page_title fw9" id="pdf-box">
+                                        <canvas id="pdf2_canvas"></canvas>
+                                    </div>
+                                {% else %}
+                                  <p class="sub_title">隊伍未上傳競賽切結書</p>
+                              {% endif %}
+                          </div>
+                          <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                              {% if files.video_link %}
+                                  <div class="youtube_container">
+                                      <iframe src="{{ video_embed_link }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="video"></iframe>
+                                  </div>
+                              {% else %}
+                                  <p class="sub_title">隊伍未上傳影片</p>
+                              {% endif %}
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </section>
+{% endblock  %}
+
+{% block JScontent %}
+    <script src="{% static "js/pdfjs/pdf.js" %}"></script>
+    <script src="{% static "js/pdfjs/pdf.worker.js" %}"></script>
+    <script>
+
+    {#-------------開始時載入pdf-------------#}
+    let pdf_current_page = {
+        "pdf1": "1",
+        "pdf2": "1",
+    };
+
+    let pdf_total_page  = {
+        "pdf1": "",
+        "pdf2": "",
+    };
+    {% if files.readme and files.affidavit %}
+        var pdf1_url = "{{ files.readme.url }}";
+        var pdf2_url = "{{ files.affidavit.url }}";
+    {% elif files.readme %}
+        var pdf1_url = "{{ files.readme.url }}";
+    {% elif files.affidavit %}
+        var pdf2_url = "{{ files.affidavit.url }}";
+    {% else %}
+
+    {% endif %}
+
+    window.onload = function(){
+        {% if files.readme and files.affidavit %}
+            pdfHTML('pdf1');
+            pdfBox('pdf1',1);
+            pdfHTML('pdf2');
+            pdfBox('pdf2',1);
+        {% elif files.readme %}
+            pdfHTML('pdf1');
+            pdfBox('pdf1',1);
+        {% elif files.affidavit %}
+            pdfHTML('pdf2');
+            pdfBox('pdf2',1);
+        {% else %}
+
+        {% endif %}
+
+    };
+
+
+    {#-------------判斷螢幕縮放-------------#}
+    var rtime;
+    var timeout = false;
+    var delta = 200;
+    $(window).resize(function() {
+        rtime = new Date();
+        if (timeout === false) {
+            timeout = true;
+            setTimeout(resizeend, delta);
+        }
+    });
+
+    function resizeend() {
+        if (new Date() - rtime < delta) {
+            setTimeout(resizeend, delta);
+        } else {
+            timeout = false;
+            pdfBox('pdf1',parseInt(pdf_current_page['pdf1']));
+            pdfBox('pdf2',parseInt(pdf_current_page['pdf2']));
+        }
+    }
+    {#-------------pdf主程式-------------#}
+    //上下頁按鈕功能
+    function previousPage(id) {
+        if (parseInt(pdf_current_page[id])>1 ) {
+            pdf_current_page[id] = parseInt(pdf_current_page[id]) - 1;
+            pdfBox(id,parseInt(pdf_current_page[id]));
+        }
+    }
+    //上下頁按鈕功能
+    function nextPage(id) {
+        if (parseInt(pdf_current_page[id]) !== parseInt(pdf_total_page[id])) {
+            pdf_current_page[id] = parseInt(pdf_current_page[id]) + 1;
+            pdfBox(id,parseInt(pdf_current_page[id]));
+        }
+    }
+
+    //上下頁按鈕渲染
+    function pdfHTML(id){
+        let previous_button = "<i onclick=\"previousPage('"+id+"')\" class=\"fas fa-arrow-alt-circle-left pni cursor-pointer previous_button\"></i>";
+        let page ="<span class=\""+id+"_current_page\"></span>/<span class=\""+ id +"_total_page\"></span>";
+        let next_button = "<i onclick=\"nextPage('"+id+"')\" class=\"fas fa-arrow-alt-circle-right pni cursor-pointer next_button\" ></i>";
+        $('#'+ id + '_canvas').parent().prepend(previous_button,page,next_button);
+    }
+
+    //上下頁按鈕顏色渲染
+    function pdfHTML_button(id){
+        if(pdf_current_page[id] == 1 ){
+            if(pdf_total_page[id] == 1 ){
+                $('.previous_button').css({'color':'#4d4d4d','cursor':'default'});
+                $('.next_button').css({'color':'#4d4d4d','cursor':'default'});
+                console.log('0 00 ')
+            }
+            else {
+                $('.previous_button').css({'color':'#4d4d4d','cursor':'default'});
+                $('.next_button').css({'color':'#FF6722','cursor':'pointer'});
+            }
+        }
+        else if(pdf_current_page[id] === pdf_total_page[id]){
+            $('.previous_button').css({'color':'#FF6722','cursor':'pointer'});
+            $('.next_button').css({'color':'#4d4d4d','cursor':'default'});
+        }
+        else {
+            $('.previous_button').css({'color':'#FF6722','cursor':'pointer'});
+            $('.next_button').css({'color':'#FF6722','cursor':'pointer'});
+        }
+    }
+
+    //pdfBox主程式
+    function pdfBox(id,page) {
+        var pdfCanvas = id +'_canvas';
+        var pdfURL = id +'_url';
+        var loadingTask = pdfjsLib.getDocument(eval(pdfURL));
+        loadingTask.promise.then(function (pdf) {
+            var pageNumber = page;
+            pdf_total_page[id] = pdf.numPages;
+            $('.'+ id +'_total_page').text(pdf_total_page[id]);
+            pdf.getPage(pageNumber).then(function (page) {
+                // Prepare canvas using PDF page dimensions
+                var container = document.getElementById('pdf-box');
+                var canvas = document.getElementById(pdfCanvas);
+                var context = canvas.getContext('2d');
+                var viewport = page.getViewport(1);
+                var scale = container.clientWidth / viewport.width;
+                viewport = page.getViewport(scale);
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                var renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+                var renderTask = page.render(renderContext);
+                renderTask.promise.then(function () {
+                });
+            });
+            $('.'+ id +'_current_page').text(pdf_current_page[id]);
+            pdfHTML_button(id);
+            }, function (reason) {
+            });
+        }
+
+    </script>
+    <script>
+        //評審功能
+        //上下頁
+        let id_list = {{ id_list }};
+        let id_list_len = Object.keys(id_list).length;
+
+        function id_now(){
+            let pathname = window.location.pathname;
+            let id = pathname.split('/')[3]
+            let id_location = 0
+            for (i=0;i<id_list_len;i++){
+                if(id_list[i] == id){
+                    id_location = i
+                 }
+            }
+            return id_location
+        }
+
+        function url_to_next(){
+            if (id_now() < id_list_len-1){
+                let id = id_list[id_now() + 1];
+                url_to_judge_team(id)
+            }
+            else {
+                new Noty({type:'error', text: '此隊為隊伍清單末端。', timeout: 3000,}).show();
+            }
+        }
+         function url_to_prev(){
+            if (id_now() != 0){
+                let id = id_list[id_now() - 1];
+                url_to_judge_team(id)
+            }
+            else {
+                new Noty({type:'error', text: '此隊為隊伍清單第一隊。', timeout: 3000,}).show();
+            }
+        }
+        //前往頁面
+        function url_to_judge_team(id){
+            url = 'http://{{ coding101_url }}/projects/judge_detail/'+id;
+            location.href=url;
+        }
+        </script>
+
+    </script>
+{% endblock %}
+

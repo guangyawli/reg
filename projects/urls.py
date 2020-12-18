@@ -15,9 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from projects.views import index, rated_projects
+from projects.views import index, rated_projects, judge_list, judge_detail
 
 urlpatterns = [
     path('', index, name='projects_home'),
     path('rated_projects', rated_projects, name='Rated_projects'),
+    path('judge_list', judge_list, name='judge_list'),
+    path('judge_detail/<int:judge_id>/', judge_detail, name='judge_detail')
 ]

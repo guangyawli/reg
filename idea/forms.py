@@ -5,6 +5,7 @@ from .models import Team, TeamMember
 class TeamDataForm(forms.ModelForm):
     class Meta:
         model = Team
+        exclude = ['team_group','stu_check']
         fields = ('team_name', 'team_topic', 'team_school', 'team_teacher', 'leader', 'video_link', 'readme',
                   'affidavit')
         widgets = {
@@ -58,7 +59,7 @@ class AddTeamMemberForm(forms.ModelForm):
 class TeamFilesForm(forms.ModelForm):
     class Meta:
         model = Team
-        exclude = ['team_name', 'team_school', 'team_teacher', 'leader']
+        exclude = ['team_name', 'team_school', 'team_teacher', 'leader', 'team_group', 'stu_check']
         widgets = {
             'team_topic': forms.TextInput(attrs={'class': 'form-control'}),
             'video_link': forms.URLInput(attrs={'class': 'form-control', 'placeholder': '例如:https://www.youtube.com/watch?v=ezilGKD06ik'}),
