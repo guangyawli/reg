@@ -28,15 +28,16 @@
             font-size: 30px;
         }
 
-        form#judge_form{
+        form#judge_form {
 
         }
-        form#judge_form input{
+
+        form#judge_form input {
             width: 100%;
             margin: 0;
             padding: 0px 10px 0px 10px;
             border: none;
-            border-bottom:1px solid #397197;
+            border-bottom: 1px solid #397197;
             color: #397197;
             font-size: 28px;
             font-weight: 900;
@@ -44,104 +45,81 @@
         }
 
         form#judge_form input::-webkit-outer-spin-button,
-        form#judge_form input::-webkit-inner-spin-button{
+        form#judge_form input::-webkit-inner-spin-button {
             -webkit-appearance: none;
             margin: 0;
         }
 
-        form#judge_form button[type='submit']{
-            position:absolute;
-            bottom:0;
+        form#judge_form button[type='submit'] {
+            position: absolute;
+            bottom: 0;
         }
 
-        form#judge_form input:focus{
+        form#judge_form input:focus {
             outline: none;
         }
+
+        form#check_judge_form {
+            position: absolute;
+            right: 0;
+            background-color: white;
+            padding: 20px;
+            top: 50%;
+        }
+        form#check_judge_form label{
+            font-size: 10px;
+            display: inline-block;
+        }
+        form#check_judge_form input {
+            display: inline-block;
+        }
+        form#check_judge_form button{
+            display: block;
+        }
     </style>
+
 {% endblock %}
 {% block error_content %}
 
 {% endblock %}
 {% block content %}
+    {% if request.user.is_superuser %}
+        <form method="post" enctype="multipart/form-data" class="content-box" id="check_judge_form">
+            {% csrf_token %}
+            <label>身分確認</label>
+            {{ stu_check.stu_check }}
+            <button class="btn btn-outline-info btn-block" type="submit">送出</button>
+        </form>
+    {% endif %}
     <section class="bottom" id="table-section">
         <div class="container">
             <h2 class="title">審查作品</h2>
-            {% if request.user.is_superuser %}
-            <div>
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                      <div class="form-row" id="form-player">
-                        <div class="col-md-3 mb-3">
-                          <label>身分確認</label>
-                          {{ stu_check.stu_check }}
-                        </div>
-                         <hr>
-                      </div>
-
-                      <button class="btn btn-primary" type="submit">送出</button>
-                </form>
-            </div>
-            {% endif %}
-            <div>
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                      <div class="form-row" id="form-player">
-                        <div class="col-md-3 mb-3">
-                          <label>應用性</label>
-                          {{ judge.score_applicability }}
-                        </div>
-                        <div class="col-md-3 mb-3">
-                          <label>創意性</label>
-                          {{ judge.score_creativity }}
-                        </div>
-                        <div class="col-md-3 mb-3">
-                          <label>挑戰性</label>
-                          {{ judge.score_challenge }}
-                        </div>
-                        <div class="col-md-3 mb-3">
-                          <label>完成度</label>
-                          {{ judge.score_completion }}
-                        </div>
-                          {# 隱藏欄位 #}
-{#                         <div class="col-md-6 mb-3">#}
-{#                          <label>評審名稱</label>#}
-{#                          <label>{{ judge.judger_name }}</label>#}
-{#                        </div>#}
-{#                        <div class="col-md-6 mb-3">#}
-{#                          <label>隊伍總分</label>#}
-{#                          <label>{{ judge.total_score }}</label>#}
-{#                        </div>#}
-                         <hr>
-                      </div>
-
-                      <button class="btn btn-primary" type="submit">送出</button>
-                </form>
-            </div>
             <div class="content-box table-responsive">
                 <div class="row">
-                    <div class="col-4">
+                    <div class="col-md-3 col-sm-12">
                         <div id="url_num"></div>
                         <button onclick="url_to_prev()" type="button" class="btn btn-outline-info btn-sm">上一隊</button>
                         <button onclick="url_to_next()" type="button" class="btn btn-outline-info btn-sm">下一隊</button>
                     </div>
-                    <div class="col-8">
-                        <form action="" id="judge_form">
+                    <div class="col-md-9 col-sm-12">
+                        <form method="post" enctype="multipart/form-data" id="judge_form">
+                            {% csrf_token %}
                             <div class="row">
                                 <div class="col">
                                     <span class="badge badge-secondary">應用性30%</span>
-                                    <input type="number" placeholder="10" min="1" max="30">
+                                    {{ judge.score_applicability }}
                                 </div>
                                 <div class="col">
                                     <span class="badge badge-secondary">創意性30%</span>
-                                    <input type="number"  placeholder="10" min="1" max="30">
+                                    {{ judge.score_creativity }}
                                 </div>
                                 <div class="col">
                                     <span class="badge badge-secondary">挑戰性20%</span>
-                                    <input type="number"  placeholder="10" min="1" max="20">
+                                    {{ judge.score_challenge }}
                                 </div>
                                 <div class="col">
                                     <span class="badge badge-secondary">完成度20%</span>
-                                    <input type="number"  placeholder="10" min="1" max="20">
+                                    {{ judge.score_completion }}
                                 </div>
                                 <div class="col">
                                     <button type="submit" class="btn btn-outline-info btn-sm">送出評分</button>

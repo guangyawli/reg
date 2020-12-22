@@ -3,7 +3,7 @@
 {% block title %}審查隊伍{% endblock %}
 {% block STYLEcontent %}
     <link rel="stylesheet" href=" https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css"/>
-     <link rel="stylesheet" href="{% static 'css/table.css' %}">
+    <link rel="stylesheet" href="{% static 'css/table.css' %}">
     <style>
 
     </style>
@@ -16,18 +16,27 @@
                 <div class="table_style_custom">
                     <table class="table table-striped" id="team_list">
                         <thead>
-                            <tr>
-                                <th>隊名</th>
-                                <th>主題</th>
-                                <th>分數</th>
-                            </tr>
+                        <tr>
+                            <th>隊名</th>
+                            <th>主題</th>
+                            <th>分數</th>
+                        </tr>
                         </thead>
                         <tbody>
                         {% for target_team in target_teams %}
                             <tr onclick="url_to_judge_team({{ target_team.id }})" class="cursor_p">
-                                <td data-sort="{{ target_team.id }}">{{ target_team.team_name }}</td>
+                                <td data-sort="{{ target_team.id }}">
+                                    {{ target_team.team_name }}
+                                    {% if target_team.stu_check %}
+                                        <i class="fas fa-check-circle" style="color:mediumseagreen"></i>
+                                    {% else %}
+                                        <i class="fas fa-times-circle" style="color: lightcoral"></i>
+                                    {% endif %}
+                                </td>
                                 <td>{{ target_team.team_topic|slice:":200" }}</td>
-                                <td>4</td>
+                                {% for tmp_team in target_team.tscore.all %}
+                                    <td> {{ tmp_team.total_score }}</td>
+                                {% endfor %}
                             </tr>
                         {% endfor %}
                         </tbody>

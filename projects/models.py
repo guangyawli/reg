@@ -15,14 +15,14 @@ class JudgerProfile(models.Model):
 
 
 class TeamScore(models.Model):
-    team = models.ForeignKey(Team, on_delete=models.CASCADE)
-    score_applicability = models.IntegerField(default=0, verbose_name='應用性', validators=[MinValueValidator(0),
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='tscore')
+    score_applicability = models.IntegerField(blank=True, default=0, verbose_name='應用性', validators=[MinValueValidator(0),
                                                                                          MaxValueValidator(30)])
-    score_creativity = models.IntegerField(default=0, verbose_name='創意性', validators=[MinValueValidator(0),
+    score_creativity = models.IntegerField(blank=True, default=0, verbose_name='創意性', validators=[MinValueValidator(0),
                                                                                       MaxValueValidator(30)])
-    score_challenge = models.IntegerField(default=0, verbose_name='挑戰性', validators=[MinValueValidator(0),
+    score_challenge = models.IntegerField(blank=True, default=0, verbose_name='挑戰性', validators=[MinValueValidator(0),
                                                                                      MaxValueValidator(20)])
-    score_completion = models.IntegerField(default=0, verbose_name='完成度', validators=[MinValueValidator(0),
+    score_completion = models.IntegerField(blank=True, default=0, verbose_name='完成度', validators=[MinValueValidator(0),
                                                                                       MaxValueValidator(20)])
     judger_name = models.CharField(max_length=20, blank=True, verbose_name='評審名稱')
     total_score = models.IntegerField(default=0, verbose_name='隊伍總分')

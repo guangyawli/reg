@@ -22,6 +22,12 @@ def judge_list(request):
             target_teams = Team.objects.all().order_by('id')
         else:
             target_teams = Team.objects.filter(team_group=request.user.judgerprofile.judger_group).order_by('id')
+
+        for target_team in target_teams:
+            target_score = TeamScore.objects.filter(team__team_name=target_team.team_name)
+            if not target_score:
+                TeamScore.objects.get_or_create(team=target_team)
+
         return render(request, 'projects/judge_team_list.html', {'target_teams': target_teams,
                                                                  'coding101_url': request.get_host()})
     else:
@@ -46,7 +52,11 @@ def judge_detail(request, judge_id):
                 stu_check = CheckTeamForm(request.POST, instance=target_team)
                 if judge.is_valid():
                     judge.save()
-                    messages.add_message(request, messages.SUCCESS, '分數儲存成功')
+                    total_team = TeamScore.objects.get(team__team_name=target_team.team_name)
+                    total_team.total_score = total_team.score_applicability + total_team.score_creativity \
+                                             + total_team.score_challenge + total_team.score_completion
+                    total_team.judger_name = request.user.judgerprofile.judger_realname
+                    total_team.save()
                 else:
                     err_msg = [(k, v[0]) for k, v in judge.errors.items()]
                     for i in range(len(err_msg)):
@@ -54,6 +64,7 @@ def judge_detail(request, judge_id):
 
                 if stu_check.is_valid():
                     stu_check.save()
+                    messages.add_message(request, messages.SUCCESS, '儲存成功')
 
                 return redirect('judge_detail', str(judge_id))
             else:
@@ -73,7 +84,12 @@ def judge_detail(request, judge_id):
                 judge = JudgeForm(request.POST, instance=target_score[0])
                 if judge.is_valid():
                     judge.save()
-                    messages.add_message(request, messages.SUCCESS, '分數儲存成功')
+                    messages.add_message(request, messages.SUCCESS, '儲存成功')
+                    total_team = TeamScore.objects.get(team__team_name=target_team.team_name)
+                    total_team.total_score = total_team.score_applicability + total_team.score_creativity \
+                                             + total_team.score_challenge + total_team.score_completion
+                    total_team.judger_name = request.user.judgerprofile.judger_realname
+                    total_team.save()
                 else:
                     err_msg = [(k, v[0]) for k, v in judge.errors.items()]
                     for i in range(len(err_msg)):
