@@ -1,39 +1,72 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}審查隊伍{% endblock  %}
+{% block title %}審查隊伍{% endblock %}
 {% block STYLEcontent %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf_viewer.min.css" />
+    <link rel="stylesheet" href=" https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css"/>
+     <link rel="stylesheet" href="{% static 'css/table.css' %}">
     <style>
-    .nav-link.active {
-        background-color: white !important;
-    }
-    .nav-link.active span{
-        background-color: #17a2b8 !important;
-    }
-    .nav-link:hover span{
-        background-color: #17a2b8 !important;
-    }
+
     </style>
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-    <div class="row">
-        <div class="col-md-8 mt-3 left">
-            {% for target_team in target_teams %}
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h2 class="card-title">{{ target_team.team_name }}</h2>
-                    <p class="card-text">{{target_team.team_topic|slice:":200" }}</p>
-                    <a href="http://{{ coding101_url }}/projects/judge_detail/{{ target_team.id }}/" class="btn btn-primary">Judge Team</a>
+    <section>
+        <div class="container">
+            <div class="content-box table-responsive">
+                <div class="table_style_custom">
+                    <table class="table table-striped" id="team_list">
+                        <thead>
+                            <tr>
+                                <th>隊名</th>
+                                <th>主題</th>
+                                <th>分數</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for target_team in target_teams %}
+                            <tr onclick="url_to_judge_team({{ target_team.id }})" class="cursor_p">
+                                <td data-sort="{{ target_team.id }}">{{ target_team.team_name }}</td>
+                                <td>{{ target_team.team_topic|slice:":200" }}</td>
+                                <td>4</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            {% endfor %}
         </div>
-    </div>
-</div>
-{% endblock  %}
+    </section>
+{% endblock %}
 
 {% block JScontent %}
+    <script>
+        function url_to_judge_team(id) {
+            url = 'http://{{ coding101_url }}/projects/judge_detail/' + id;
+            location.href = url;
+        }
+    </script>
+
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#team_list').DataTable({
+                "pageLength": 25,
+                "language": {
+                    "lengthMenu": "顯示每 _MENU_ 筆資料/頁",
+                    "zeroRecords": "找尋不到資料，請確認輸入是否有誤。",
+                    "info": "目前顯示第 _PAGE_ 頁，全部資料共 _PAGES_ 頁",
+                    "infoEmpty": "無任何相符資料",
+                    "infoFiltered": "(總資料為 _MAX_ 筆。)",
+                    "search": " 搜尋: ",
+                    "searchPlaceholder": "請輸入隊伍名稱或主題",
+                    "paginate": {
+                        "previous": "上一頁",
+                        "next": "下一頁",
+                    }
+                }
+            });
+        });
+    </script>
 {% endblock %}
 
