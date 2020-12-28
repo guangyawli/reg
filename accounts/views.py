@@ -1,9 +1,10 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-from .forms import RegisterForm, LoginForm, ResetRequestForm, ResetPwdForm, ResendConfirmForm
+from .forms import RegisterForm, LoginForm, ResetRequestForm, ResetPwdForm, ResendConfirmForm, AllLeaderForm
 from .models import UserProfile
 from django.contrib import messages
+from projects.models import JudgerProfile
 # import logging
 import uuid
 from idea.models import Team, TeamMember
@@ -132,7 +133,12 @@ def sign_in(request):
                 login(request, user)
                 if request.user.is_active:
                     messages.add_message(request, messages.SUCCESS, '登入成功')
-                    return redirect('account_home')
+                    if JudgerProfile.objects.filter(user=request.user):
+                        check = JudgerProfile.objects.get(user=request.user)
+                        if check.check_judger is True:
+                            return redirect('judge_list')
+                    else:
+                        return redirect('account_home')
                 # else:
                 #     logout(request, user)
                 #     messages.add_message(request, messages.INFO, '請前往註冊信箱，並點擊註冊信連結啟用帳號')
@@ -336,3 +342,68 @@ def resend_active_letter(request):
             'rform': rform
         }
         return render(request, 'accounts/reset_request.html', context)
+
+
+def all_leader_mail(request):
+    if request.user.is_superuser:
+        if request.method == "POST":
+            random_code = 'announcement_' + '{}'.format(uuid.uuid4().hex[:5])
+            print(request.POST)
+            Emails.objects.create(e_title=request.POST['mail_title'], e_content=request.POST['mail_content'],
+                                  e_status=random_code)
+            # all_teams = Team.objects.all()
+
+            # smtp information
+            tmp_server = MailServer.objects.get(id=1)
+            conn = get_connection()
+            conn.username = tmp_server.m_user  # username
+            conn.password = tmp_server.m_password  # password
+            conn.host = tmp_server.m_server  # mail server
+            conn.open()
+
+            alluser = User.objects.all()
+            target_mails = []
+            target_mails.append('gyli@mail.fcu.edu.tw')
+            for tleader in alluser:
+                target_mails.append(tleader.email)
+            # print(test_mails)
+            # print(courses.course_id)
+            # logging.debug(str(target_mails) + str(datetime.now()))
+
+            test_from = Emails.objects.get(e_status=random_code).e_from
+            test_title = Emails.objects.get(e_status=random_code).e_title
+            announcement = Emails.objects.get(e_status=random_code).e_content
+            context = {
+                'coding101_url': request.get_host,
+                'announcement': announcement
+            }
+            # print(courses.course_name)
+            email_template_name = 'accounts/mail_leaders.html'
+            t = loader.get_template(email_template_name)
+
+            mail_list = target_mails
+
+            subject, from_email, to = test_title, test_from, mail_list
+            html_content = t.render(dict(context))  # str(test_content)
+            msg = EmailMultiAlternatives(subject, html_content, from_email, bcc=to)
+            # msg = EmailMultiAlternatives(subject, html_content, from_email, to=to)
+            msg.attach_alternative(html_content, "text/html")
+            # msg.attach_file(STATIC_ROOT + 'insights_readme.pdf')
+            conn.send_messages([msg, ])  # send_messages发送邮件
+
+            conn.close()
+            messages.add_message(request, messages.SUCCESS, '寄送成功')
+
+            rform = AllLeaderForm(request.POST)
+            context = {
+                'target': "通知信",
+                'rform': rform,
+            }
+        else:
+            rform = AllLeaderForm()
+            context = {
+                'target': "公告",
+                'rform': rform
+            }
+
+        return render(request, 'accounts/leader_mail_request.html', context)

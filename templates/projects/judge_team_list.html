@@ -5,11 +5,125 @@
     <link rel="stylesheet" href=" https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css"/>
     <link rel="stylesheet" href="{% static 'css/table.css' %}">
     <style>
+        #judge_modal{
+            font-weight: 900;
+        }
+        #judge_modal thead th{
+            text-align: center;
+            background-color: rgba(57,113,151,0.1);
+        }
 
+        #judge_modal tbody tr{
+            font-size: 12px;
+            background-color: rgba(57,113,151,0.1);
+            text-align: center;
+        }
+        #judge_modal tbody tr.level td{
+            font-size: 16px;
+            padding: 5px 12px 5px 12px;
+        }
+        #judge_modal tbody tr.level td:nth-child(1){
+            background-color: rgba(57,113,151,0.8);
+        }
+        #judge_modal tbody tr.level td:nth-child(2){
+            background-color: rgba(57,113,151,0.6);
+        }
+        #judge_modal tbody tr.level td:nth-child(3){
+            background-color: rgba(57,113,151,0.4);
+        }
+        #judge_modal tbody tr.level td:nth-child(4){
+            background-color: rgba(57,113,151,0.2);
+        }
     </style>
 {% endblock %}
 
 {% block content %}
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document" id="judge_modal">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th scope="col">項目</th>
+                            <th colspan="4">建議評分</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td scope="row" rowspan="2">應用性30%</td>
+                            <td>此專案提及科系、專業、大眾(三者其一)，且對於此主題之應用能有效解決其議題。</td>
+                            <td>此專案提及特定團體、個人需求(兩者其一)，且對於此主題之應用能有效解決其議題。</td>
+                            <td>此專案有提及使用團體(前述五者)，但主題之應用僅能部分解決其議題。</td>
+                            <td>此專案無提及使用團體(任何族群)，或有提及卻無法解決其議題。</td>
+                        </tr>
+                        <tr class="level">
+                            <td>30分~25分</td>
+                            <td>25分~20分</td>
+                            <td>20分~15分</td>
+                            <td>15分~1分</td>
+                        </tr>
+                        <tr>
+                            <td scope="row" rowspan="2">創意性30%</td>
+                            <td>此專案無提及使用團體(任何族群)，或有提及卻無法解決其議題。</td>
+                            <td>創作理念表達完整且清晰，市面上有少許類似的題材，但隊伍有針對特定方向加深應用。</td>
+                            <td>創作理念表達模糊，或市面上已有許多類似的題材但隊伍有針對特定方向加深應用。</td>
+                            <td>創作理念表達模糊，或市面上已有許多類似的題材且隊伍也沒有加深應用。</td>
+                        </tr>
+                        <tr class="level">
+                            <td>30分~25分</td>
+                            <td>25分~20分</td>
+                            <td>20分~15分</td>
+                            <td>15分~1分</td>
+                        </tr>
+                        <tr>
+                            <td scope="row" rowspan="2">挑戰性20%</td>
+                            <td>程式具備相當邏輯複雜度，且應用部分特別技術。"</td>
+                            <td>程式具備相當邏輯複雜度，或應用部分特別技術。</td>
+                            <td>程式相對簡單，但畫面設計完善。</td>
+                            <td>程式相對簡單，且畫面設計簡陋。</td>
+
+                        </tr>
+                        <tr class="level">
+                            <td>20分~15分</td>
+                            <td>15分~10分</td>
+                            <td>10分~5分</td>
+                            <td>5分~1分</td>
+                        </tr>
+                        <tr>
+                            <td scope="row" rowspan="2">完成度20%</td>
+                            <td>影片與書面報告製作優良，且程式已完成八成以上。</td>
+                            <td>影片與書面報告製作優良，但程式僅完成六成至八成。</td>
+                            <td>影片與書面報告製作普通，或程式僅完成四成至六成。</td>
+                            <td>影片與書面報告製作不佳，或程式僅完成四成以下。</td>
+                        </tr>
+                        <tr class="level">
+                            <td>20分~15分</td>
+                            <td>15分~10分</td>
+                            <td>10分~5分</td>
+                            <td>5分~1分</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section>
+        <div class="container">
+            <div class="content-box">
+                <h2 class="title">審查隊伍</h2>
+                <p class="sub_title">{{ request.user.username }} 老師您好，以下為您負責之審查隊伍。<br>
+                    請您於110/1/20(三)前完成評審，相關評審標準您可以參考 <a href="" data-toggle="modal" data-target="#exampleModal">評分建議表</a><br>
+                    如有其他問題歡迎聯繫<a href="mailto:pinhchen@mail.fcu.edu.tw">pinhchen@mail.fcu.edu.tw</a> (陳助理)</p>
+            </div>
+        </div>
+    </section>
     <section>
         <div class="container">
             <div class="content-box table-responsive">
@@ -19,12 +133,17 @@
                         <tr>
                             <th>隊名</th>
                             <th>主題</th>
-                            <th>分數</th>
+                            <th style="font-size: 10px;">應用性</th>
+                            <th style="font-size: 10px;">創意性</th>
+                            <th style="font-size: 10px;">挑戰性</th>
+                            <th style="font-size: 10px;">完成性</th>
+                            <th style="font-size: 10px;">總分</th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for target_team in target_teams %}
-                            <tr onclick="url_to_judge_team({{ target_team.id }})" class="cursor_p">
+                            {% for tmp_team in target_team.tscore.all %}
+                                <tr onclick="url_to_judge_team({{ target_team.id }})" class="cursor_p">
                                 <td data-sort="{{ target_team.id }}">
                                     {{ target_team.team_name }}
                                     {% if target_team.stu_check %}
@@ -34,10 +153,13 @@
                                     {% endif %}
                                 </td>
                                 <td>{{ target_team.team_topic|slice:":200" }}</td>
-                                {% for tmp_team in target_team.tscore.all %}
-                                    <td> {{ tmp_team.total_score }}</td>
-                                {% endfor %}
-                            </tr>
+                                <td> {{ tmp_team.score_applicability }}</td>
+                                <td> {{ tmp_team.score_creativity }}</td>
+                                <td> {{ tmp_team.score_challenge }}</td>
+                                <td> {{ tmp_team.score_completion }}</td>
+                                <td> {{ tmp_team.total_score }}</td>
+                            {% endfor %}
+                        </tr>
                         {% endfor %}
                         </tbody>
                     </table>

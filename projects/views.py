@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from idea.models import Team
+from idea.models import Team, TeamMember
 from projects.models import TeamScore, JudgerProfile
 from projects.forms import JudgeForm, CheckTeamForm
 from django.contrib import messages
@@ -44,6 +44,7 @@ def judge_detail(request, judge_id):
                 id_list.append(target.id)
             target_team = Team.objects.get(id=judge_id)
             target_score = TeamScore.objects.filter(team__team_name=target_team.team_name)
+            target_members = TeamMember.objects.filter(team=target_team)
             if not target_score:
                 create_score, cflag = TeamScore.objects.get_or_create(team=target_team)
                 target_score = TeamScore.objects.filter(team__team_name=target_team.team_name)
@@ -99,10 +100,17 @@ def judge_detail(request, judge_id):
             else:
                 judge = JudgeForm(instance=target_score[0])
             stu_check = CheckTeamForm(instance=target_team)
+        if request.user.is_superuser:
+            return render(request, 'projects/judge_team.html', {'files': target_team, 'id_list': id_list,
+                                                                'coding101_url': request.get_host(),
+                                                                'judge': judge,
+                                                                'stu_check': stu_check,
+                                                                'target_members': target_members})
+        else:
+            return render(request, 'projects/judge_team.html', {'files': target_team, 'id_list': id_list,
+                                                                'coding101_url': request.get_host(),
+                                                                'judge': judge,
+                                                                'stu_check': stu_check})
 
-        return render(request, 'projects/judge_team.html', {'files': target_team, 'id_list': id_list,
-                                                            'coding101_url': request.get_host(),
-                                                            'judge': judge,
-                                                            'stu_check': stu_check})
     else:
         return redirect('home')

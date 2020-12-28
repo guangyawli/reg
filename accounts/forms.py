@@ -74,3 +74,14 @@ class ResendConfirmForm(forms.Form):
         label="請輸入帳號",
         widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'resend_confirm'})
     )
+
+
+class AllLeaderForm(forms.Form):
+    mail_title = forms.CharField(
+        label="信件標題",
+        widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'id_mail_title','value':'【Coding101】系統通知信'})
+    )
+    mail_content = forms.CharField(
+        label="信件內容",
+        widget=forms.Textarea(attrs={'class': 'form-control', 'id': 'id_mail_content'})
+    )

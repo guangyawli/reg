@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}{{ target }}{% endblock  %}
+{% block content %}
+    <section class="bottom" id="table-section">
+        <div class="container">
+            <h2 class="title">{{ target }}</h2>
+            <p class="sub_title"></p>
+            <div class="content-box table-responsive">
+                 <form action="" method="POST">
+                    {% csrf_token %}
+                    {{ rform }}
+                <hr>
+                <button class="btn btn-outline-info" type="submit" > 送出 </button>
+                </form>
+            </div>
+        </div>
+    </section>
+{% endblock  %}
+
+
+
+
+
+
+
+
+

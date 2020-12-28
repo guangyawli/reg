@@ -62,7 +62,7 @@ class TeamFilesForm(forms.ModelForm):
         exclude = ['team_name', 'team_school', 'team_teacher', 'leader', 'team_group', 'stu_check']
         widgets = {
             'team_topic': forms.TextInput(attrs={'class': 'form-control'}),
-            'video_link': forms.URLInput(attrs={'class': 'form-control', 'placeholder': '例如:https://www.youtube.com/watch?v=ezilGKD06ik'}),
+            'video_link': forms.URLInput(attrs={'class': 'form-control', 'placeholder': '例如:https://www.youtube.com/embed/ezilGKD06ik'}),
             'readme': forms.ClearableFileInput(attrs={'class': 'upload-box', 'id': 'readme'}),
             'affidavit': forms.ClearableFileInput(attrs={'class': 'upload-box'}),
         }
