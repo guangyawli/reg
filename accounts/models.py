@@ -16,6 +16,8 @@ class Emails(models.Model):
     e_title = models.CharField(max_length=100, blank=False, verbose_name='信件標題', default='default_title')
     e_content = RichTextField(blank=True, verbose_name='信件內容', null=True)
     e_status = models.CharField(max_length=50, verbose_name='功能', blank=True)
+    e_team = models.IntegerField(verbose_name='隊伍id', blank=True, default=-1)
+    e_time = models.DateTimeField(auto_now=True, verbose_name='寄送時間', blank=True)
 
     def __str__(self):
         return self.e_title

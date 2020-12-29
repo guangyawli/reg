@@ -350,7 +350,7 @@ def all_leader_mail(request):
             random_code = 'announcement_' + '{}'.format(uuid.uuid4().hex[:5])
             print(request.POST)
             Emails.objects.create(e_title=request.POST['mail_title'], e_content=request.POST['mail_content'],
-                                  e_status=random_code)
+                                  e_status=random_code, e_team=-1)
             # all_teams = Team.objects.all()
 
             # smtp information

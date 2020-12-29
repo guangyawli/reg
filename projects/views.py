@@ -3,8 +3,14 @@ from django.contrib.auth.decorators import login_required
 from idea.models import Team, TeamMember
 from projects.models import TeamScore, JudgerProfile
 from projects.forms import JudgeForm, CheckTeamForm
+from accounts.forms import OnlyLeaderForm
 from django.contrib import messages
-# Create your views here.
+
+import uuid
+# Email
+from django.core.mail import EmailMultiAlternatives, get_connection
+from accounts.models import MailServer, Emails
+from django.template import loader
 
 
 def index(request):
@@ -51,6 +57,7 @@ def judge_detail(request, judge_id):
             if request.method == "POST":
                 judge = JudgeForm(request.POST, instance=target_score[0])
                 stu_check = CheckTeamForm(request.POST, instance=target_team)
+                mail_leader_form = OnlyLeaderForm(request.POST)
                 if judge.is_valid():
                     judge.save()
                     total_team = TeamScore.objects.get(team__team_name=target_team.team_name)
@@ -67,8 +74,49 @@ def judge_detail(request, judge_id):
                     stu_check.save()
                     messages.add_message(request, messages.SUCCESS, '儲存成功')
 
+                if mail_leader_form.is_valid() and request.POST['mail_content2']:
+                    random_code = 'inform_' + '{}'.format(uuid.uuid4().hex[:5])
+                    Emails.objects.create(e_title=request.POST['mail_title2'], e_team=judge_id,
+                                                       e_content=request.POST['mail_content2'], e_status=random_code)
+
+                    # smtp information
+                    tmp_server = MailServer.objects.get(id=1)
+                    conn = get_connection()
+                    conn.username = tmp_server.m_user  # username
+                    conn.password = tmp_server.m_password  # password
+                    conn.host = tmp_server.m_server  # mail server
+                    conn.open()
+
+                    target_mails = []
+                    target_mails.append('gyli@mail.fcu.edu.tw')
+                    target_mails.append(target_members[0].email_addr)
+
+                    test_from = Emails.objects.get(e_status=random_code).e_from
+                    test_title = Emails.objects.get(e_status=random_code).e_title
+                    announcement = Emails.objects.get(e_status=random_code).e_content
+                    context = {
+                        'coding101_url': request.get_host,
+                        'announcement': announcement
+                    }
+
+                    email_template_name = 'projects/mail_only_leader.html'
+                    t = loader.get_template(email_template_name)
+
+                    mail_list = target_mails
+
+                    subject, from_email, to = test_title, test_from, mail_list
+                    html_content = t.render(dict(context))  # str(test_content)
+                    msg = EmailMultiAlternatives(subject, html_content, from_email, bcc=to)
+                    # msg = EmailMultiAlternatives(subject, html_content, from_email, to=to)
+                    msg.attach_alternative(html_content, "text/html")
+                    # msg.attach_file(STATIC_ROOT + 'insights_readme.pdf')
+                    conn.send_messages([msg, ])  # send_messages发送邮件
+
+                    conn.close()
+
                 return redirect('judge_detail', str(judge_id))
             else:
+                mail_leader_form = OnlyLeaderForm()
                 judge = JudgeForm(instance=target_score[0])
                 stu_check = CheckTeamForm(instance=target_team)
         else:
@@ -101,11 +149,24 @@ def judge_detail(request, judge_id):
                 judge = JudgeForm(instance=target_score[0])
             stu_check = CheckTeamForm(instance=target_team)
         if request.user.is_superuser:
-            return render(request, 'projects/judge_team.html', {'files': target_team, 'id_list': id_list,
-                                                                'coding101_url': request.get_host(),
-                                                                'judge': judge,
-                                                                'stu_check': stu_check,
-                                                                'target_members': target_members})
+            last_mails = Emails.objects.filter(e_team=judge_id)
+
+            if last_mails:
+                return render(request, 'projects/judge_team.html', {'files': target_team, 'id_list': id_list,
+                                                                    'coding101_url': request.get_host(),
+                                                                    'judge': judge,
+                                                                    'stu_check': stu_check,
+                                                                    'target_members': target_members,
+                                                                    'mail_leader_form': mail_leader_form,
+                                                                    'last_mails': last_mails})
+            else:
+                return render(request, 'projects/judge_team.html', {'files': target_team, 'id_list': id_list,
+                                                                    'coding101_url': request.get_host(),
+                                                                    'judge': judge,
+                                                                    'stu_check': stu_check,
+                                                                    'target_members': target_members,
+                                                                    'mail_leader_form': mail_leader_form})
+
         else:
             return render(request, 'projects/judge_team.html', {'files': target_team, 'id_list': id_list,
                                                                 'coding101_url': request.get_host(),

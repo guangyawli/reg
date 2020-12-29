@@ -15,7 +15,9 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 
 class EmailsAdmin(admin.ModelAdmin):
-    list_display = ('e_from', 'e_title', 'e_content', 'e_status')
+    list_display = ('e_title', 'e_content', 'e_time')
+    search_fields = ("e_status", "e_title", 'e_content')
+    ordering = ("-e_time",)
 
 
 class MailServerAdmin(admin.ModelAdmin):

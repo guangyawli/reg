@@ -85,3 +85,15 @@ class AllLeaderForm(forms.Form):
         label="信件內容",
         widget=forms.Textarea(attrs={'class': 'form-control', 'id': 'id_mail_content'})
     )
+
+
+class OnlyLeaderForm(forms.Form):
+    mail_title2 = forms.CharField(
+        label="信件標題",
+        widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'id_mail_title2',
+                                      'value': '【Coding101】通知信/繳交資料有誤'})
+    )
+    mail_content2 = forms.CharField(
+        label="信件內容",
+        widget=forms.Textarea(attrs={'class': 'form-control', 'id': 'id_mail_content2'})
+    )

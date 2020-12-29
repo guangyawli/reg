@@ -1,0 +1,111 @@
+
+.table_style_custom table > thead > tr > th {
+    color: #397197;
+    font-weight: 900;
+    padding-top: 10px;
+    font-size: 20px;
+}
+
+.table_style_custom table > tbody > tr > td {
+    color: #397197;
+    font-weight: 600;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    font-size: 14px;
+    vertical-align: middle;
+    border: none;
+}
+
+.table_style_custom table > tbody > tr:hover {
+    background-color: #397197 !important;
+    cursor: pointer;
+    transition: 0.2s linear;
+    box-shadow: 3px 2px 10px #397197;
+    border: #397197;
+    z-index: 9999;
+}
+
+.table_style_custom table > tbody > tr:hover td {
+    color: white;
+}
+
+.table_style_custom table > tbody > tr:hover button {
+    color: white;
+}
+
+.table_style_custom table > tbody > tr.odd {
+    background-color: rgb(233, 236, 243);
+}
+
+/*Course_index*/
+.table-4t-course-custom > thead > tr > th {
+    color: #397197;
+    font-weight: 900;
+    padding-top: 10px;
+    font-size: 16px;
+}
+
+.table-4t-course-custom > tbody > tr > td {
+    color: #397197;
+    font-weight: 600;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: 14px;
+}
+
+.table-4t-course-custom > tbody > tr:hover {
+    background-color: #397197 !important;
+    cursor: pointer;
+    transition: 0.2s linear;
+    box-shadow: 3px 2px 10px #397197;
+    border: #397197;
+    z-index: 9999;
+}
+
+.table-4t-course-custom > tbody > tr:hover td {
+    color: white;
+}
+
+.table-4t-course-custom > tbody > tr:hover button {
+    color: white;
+}
+
+.table-4t-course-custom > tbody > tr.odd {
+    background-color: rgb(233, 236, 243);
+}
+
+.table_style_custom .dataTables_length label,
+.table_style_custom .dataTables_length option,
+.table_style_custom .dataTables_filter label,
+.table_style_custom .dataTables_info {
+    color: #397197;
+    font-weight: 700;
+}
+
+.table_style_custom .dataTables_filter input {
+    border: none;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+    border-bottom: #397197 1px solid;
+    color: #397197;
+}
+
+.table_style_custom .dataTables_filter input:focus {
+    outline: none;
+    border-bottom: #397197 1px solid;
+}
+
+.table_style_custom .dataTables_filter label {
+    width: 100% !important;
+}
+
+.table_style_custom .dataTables_paginate li {
+    font-size: 20px;
+    color: #397197;
+    margin: 0px 5px 0px 5px !important;
+}
+
+.table_style_custom .dataTables_paginate a {
+    color: #397197;
+}

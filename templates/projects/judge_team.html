@@ -132,41 +132,6 @@
                     </div>
                 </div>
             </div>
-            <div class="content-box table-responsive">
-                <div class="row">
-                    <div class="col-4">
-                        <h5><span class="badge badge-secondary">隊伍資訊</span></h5>
-                        <span class="badge badge-secondary">隊長</span>{{ files.member_name }}
-                        {% if request.user.is_superuser %}
-                        <div>
-{#                            {{ target_members }}#}
-                            {% for target_member in target_members %}
-                                {% if forloop.first %}
-                                    {{ target_member.email_addr }}
-                                    <br>
-                                {% endif %}
-                            {{ target_member.member_name }}
-                            {{ target_member.school_name }}
-                            {{ target_member.department_name }}
-                            {{ target_member.department_grade }}
-                                <br>
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                    </div>
-                    <div class="col-8">
-                        <h5><span class="badge badge-secondary">競賽切結書</span></h5>
-                        <a href="{{ files.affidavit.url }}">另開視窗</a>
-                        {% if files.affidavit %}
-                            <div class="page_title fw9" id="pdf-box">
-                                <canvas id="pdf2_canvas"></canvas>
-                            </div>
-                        {% else %}
-                            <p class="sub_title">隊伍未上傳競賽切結書</p>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
 
             <div class="content-box table-responsive">
                 <div class="row">
@@ -191,7 +156,6 @@
                         <div class="tab-content" id="v-pills-tabContent">
                             <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
                                  aria-labelledby="v-pills-home-tab">
-                                <span class="badge badge-secondary">作品說明書</span>
                                 {% if files.readme %}
                                     <div class="page_title fw9" id="pdf-box">
                                         <canvas id="pdf1_canvas"
@@ -217,6 +181,66 @@
                     </div>
                 </div>
             </div>
+
+            {% if request.user.is_superuser %}
+                <p class="sub_title" style="padding-top: 10px;width: 100%;text-align: center">
+                    ------------------------以下僅工作人員可視------------------------</p>
+                <div class="content-box table-responsive">
+                    <div class="row">
+                        <div class="col-4">
+                            <h5><span class="badge badge-secondary">隊伍資訊</span></h5>
+                            <div>
+                                {% for target_member in target_members %}
+                                    {% if forloop.first %}
+                                        <span class="badge badge-info">隊長</span>
+                                    {% else %}
+                                        <span class="badge badge-info">隊員</span>
+                                    {% endif %}
+                                    <p class="sub_title">
+                                        {{ target_member.member_name }}<br>
+                                        {{ target_member.school_name }}{{ target_member.department_name }}{{ target_member.department_grade }}年級
+                                    </p>
+                                {% endfor %}
+                            </div>
+                            <h5><span class="badge badge-secondary">聯絡隊長</span></h5>
+                            {% for target_member in target_members %}
+                                {% if forloop.first %}
+                                    <a href="mailto:{{ target_member.email_addr }}">{{ target_member.email_addr }}</a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="col-8">
+                            <h5><span class="badge badge-secondary">競賽切結書</span></h5>
+                            {% if files.affidavit %}
+                                <a href="{{ files.affidavit.url }}">另開視窗</a>
+                                <div class="page_title fw9" id="pdf-box">
+                                    <canvas id="pdf2_canvas"></canvas>
+                                </div>
+                            {% else %}
+                                <p class="sub_title">隊伍未上傳競賽切結書</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <p class="sub_title" style="padding-top: 10px;width: 100%;text-align: center">
+                        ------------------------信件系統------------------------</p>
+                    <h5><span class="badge badge-secondary">信件紀錄</span></h5>
+                    {% for lastmail in last_mails %}
+                        <p style="margin-bottom: 2px"><span class="badge badge-info"
+                                 style="margin-right: 5px">{{ lastmail.e_time }}</span>{{ lastmail.e_content }}</p>
+
+                    {% endfor %}
+                    <form method="post" enctype="multipart/form-data" id="judge_form3">
+                        {% csrf_token %}
+                        {% for field in mail_leader_form %}
+                            <h5><label for="{{ field.auto_id }}"><span
+                                    class="badge badge-secondary">{{ field.label }}</span></label></h5>
+                            {{ field }}
+                        {% endfor %}
+                        <button type="submit" class="btn btn-outline-info btn-sm">送出信件</button>
+                    </form>
+                </div>
+            {% endif %}
+
         </div>
     </section>
 {% endblock %}
