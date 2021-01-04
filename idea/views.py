@@ -29,7 +29,8 @@ def file_list(request):
     else:
         return redirect('add_team')
 
-    return render(request, 'idea/file_list.html', {'files': files, 'video_embed_link': video_embed_link})
+    return render(request, 'idea/file_list.html', {'files': files, 'video_embed_link': video_embed_link,
+                                                   'target_team': target_team})
 
 
 @login_required

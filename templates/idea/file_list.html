@@ -25,9 +25,11 @@
             <h2 class="title">我的作品</h2>
             <p class="sub_title">檢視我的個人作品</p>
             <div class="content-box table-responsive">
+                {% if target_team.stu_check != True %}
                 <button class="btn btn-outline-info mb-1" onclick="location.href='{% url 'add_files' %}'"  type="submit"><i class="far fa-edit"></i>
                    編輯
                 </button>
+                {% endif %}
                 <div class="row">
                     <div class="col-12 col-md-3">
                         <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
@@ -112,9 +114,11 @@
                         </div>
                       </div>
                       <hr>
+                      {% if target_team.stu_check != True %}
                       <button type="submit" class="btn btn-outline-info mb-1">
                           <i class="far fa-check-circle pr-05"></i>送出
                       </button>
+                      {% endif %}
                 </form>
             </div>
         </div>

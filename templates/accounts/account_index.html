@@ -91,7 +91,11 @@
                         </div>
                         <div class="col-12 col-md-3">
                             <h3 class="title">初賽資料驗證
-                                <i class="fas fa-times-circle" style="color: lightcoral"></i>
+                                {% if target_team.stu_check %}
+                                    <i class="fas fa-check-circle" style="color:mediumseagreen"></i>
+                                {% else %}
+                                    <i class="fas fa-times-circle" style="color: lightcoral"></i>
+                                {% endif %}
                             </h3>
                             <hr>
                             <p class="sub_title">擬訂於110/1/11(一)前完成驗證</p>

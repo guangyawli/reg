@@ -137,6 +137,8 @@ def sign_in(request):
                         check = JudgerProfile.objects.get(user=request.user)
                         if check.check_judger is True:
                             return redirect('judge_list')
+                        else:
+                            return redirect('account_home')
                     else:
                         return redirect('account_home')
                 # else:

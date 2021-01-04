@@ -138,26 +138,52 @@
                             <th style="font-size: 10px;">挑戰性</th>
                             <th style="font-size: 10px;">完成性</th>
                             <th style="font-size: 10px;">總分</th>
+                            {% if request.user.is_superuser %}
+                            <th style="font-size: 10px;">評審</th>
+                            <th style="font-size: 10px;">組別</th>
+                            {% endif %}
                         </tr>
                         </thead>
                         <tbody>
                         {% for target_team in target_teams %}
                             {% for tmp_team in target_team.tscore.all %}
-                                <tr onclick="url_to_judge_team({{ target_team.id }})" class="cursor_p">
-                                <td data-sort="{{ target_team.id }}">
+                                {% if request.user.is_superuser %}
+                                    <tr onclick="url_to_judge_team({{ target_team.id }})" class="cursor_p">
+                                    <td data-sort="{{ target_team.id }}">
                                     {{ target_team.team_name }}
                                     {% if target_team.stu_check %}
                                         <i class="fas fa-check-circle" style="color:mediumseagreen"></i>
                                     {% else %}
                                         <i class="fas fa-times-circle" style="color: lightcoral"></i>
                                     {% endif %}
-                                </td>
-                                <td>{{ target_team.team_topic|slice:":200" }}</td>
-                                <td> {{ tmp_team.score_applicability }}</td>
-                                <td> {{ tmp_team.score_creativity }}</td>
-                                <td> {{ tmp_team.score_challenge }}</td>
-                                <td> {{ tmp_team.score_completion }}</td>
-                                <td> {{ tmp_team.total_score }}</td>
+                                    </td>
+                                    <td>{{ target_team.team_topic|slice:":200" }}</td>
+                                    <td> {{ tmp_team.score_applicability }}</td>
+                                    <td> {{ tmp_team.score_creativity }}</td>
+                                    <td> {{ tmp_team.score_challenge }}</td>
+                                    <td> {{ tmp_team.score_completion }}</td>
+                                    <td> {{ tmp_team.total_score }}</td>
+                                    <td> {{ tmp_team.judger_name }}</td>
+                                    <td> {{ target_team.team_group }}</td>
+                                {% else %}
+                                    {% if tmp_team.judger_name == request.user.judgerprofile.judger_realname %}
+                                    <tr onclick="url_to_judge_team({{ target_team.id }})" class="cursor_p">
+                                    <td data-sort="{{ target_team.id }}">
+                                    {{ target_team.team_name }}
+                                    {% if target_team.stu_check %}
+                                        <i class="fas fa-check-circle" style="color:mediumseagreen"></i>
+                                    {% else %}
+                                        <i class="fas fa-times-circle" style="color: lightcoral"></i>
+                                    {% endif %}
+                                    </td>
+                                    <td>{{ target_team.team_topic|slice:":200" }}</td>
+                                    <td> {{ tmp_team.score_applicability }}</td>
+                                    <td> {{ tmp_team.score_creativity }}</td>
+                                    <td> {{ tmp_team.score_challenge }}</td>
+                                    <td> {{ tmp_team.score_completion }}</td>
+                                    <td> {{ tmp_team.total_score }}</td>
+                                    {% endif %}
+                                {% endif %}
                             {% endfor %}
                         </tr>
                         {% endfor %}
