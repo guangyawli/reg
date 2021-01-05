@@ -137,7 +137,16 @@
             <div class="content-box table-responsive">
                 <div class="row">
                     <div class="col-12">
-                        <h2 class="title">{{ files.team_name }}</h2>
+                        <h2 class="title">
+                            {{ files.team_name }}
+                            {% if files.stu_check %}
+                                <i class="fas fa-check-circle" style="color:mediumseagreen"></i>
+                            {% elif files.video_link == '' and files.readme == '' and files.affidavit == '' %}
+                                <i class="fas fa-ban" style="color:coral"></i>
+                            {% else %}
+                                <i class="fas fa-times-circle" style="color: lightcoral"></i>
+                            {% endif %}
+                        </h2>
                         <p class="sub_title">{{ files.team_topic }}</p>
                     </div>
                     <div class="col-12 col-md-4">

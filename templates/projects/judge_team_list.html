@@ -5,34 +5,40 @@
     <link rel="stylesheet" href=" https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css"/>
     <link rel="stylesheet" href="{% static 'css/table.css' %}">
     <style>
-        #judge_modal{
+        #judge_modal {
             font-weight: 900;
         }
-        #judge_modal thead th{
+
+        #judge_modal thead th {
             text-align: center;
-            background-color: rgba(57,113,151,0.1);
+            background-color: rgba(57, 113, 151, 0.1);
         }
 
-        #judge_modal tbody tr{
+        #judge_modal tbody tr {
             font-size: 12px;
-            background-color: rgba(57,113,151,0.1);
+            background-color: rgba(57, 113, 151, 0.1);
             text-align: center;
         }
-        #judge_modal tbody tr.level td{
+
+        #judge_modal tbody tr.level td {
             font-size: 16px;
             padding: 5px 12px 5px 12px;
         }
-        #judge_modal tbody tr.level td:nth-child(1){
-            background-color: rgba(57,113,151,0.8);
+
+        #judge_modal tbody tr.level td:nth-child(1) {
+            background-color: rgba(57, 113, 151, 0.8);
         }
-        #judge_modal tbody tr.level td:nth-child(2){
-            background-color: rgba(57,113,151,0.6);
+
+        #judge_modal tbody tr.level td:nth-child(2) {
+            background-color: rgba(57, 113, 151, 0.6);
         }
-        #judge_modal tbody tr.level td:nth-child(3){
-            background-color: rgba(57,113,151,0.4);
+
+        #judge_modal tbody tr.level td:nth-child(3) {
+            background-color: rgba(57, 113, 151, 0.4);
         }
-        #judge_modal tbody tr.level td:nth-child(4){
-            background-color: rgba(57,113,151,0.2);
+
+        #judge_modal tbody tr.level td:nth-child(4) {
+            background-color: rgba(57, 113, 151, 0.2);
         }
     </style>
 {% endblock %}
@@ -132,6 +138,9 @@
                         <thead>
                         <tr>
                             <th>隊名</th>
+                            {% if request.user.is_superuser %}
+                                <th style="font-size: 20px;"></th>
+                            {% endif %}
                             <th>主題</th>
                             <th style="font-size: 10px;">應用性</th>
                             <th style="font-size: 10px;">創意性</th>
@@ -139,8 +148,8 @@
                             <th style="font-size: 10px;">完成性</th>
                             <th style="font-size: 10px;">總分</th>
                             {% if request.user.is_superuser %}
-                            <th style="font-size: 10px;">評審</th>
-                            <th style="font-size: 10px;">組別</th>
+                                <th style="font-size: 10px;">評審</th>
+                                <th style="font-size: 10px;">組別</th>
                             {% endif %}
                         </tr>
                         </thead>
@@ -150,13 +159,15 @@
                                 {% if request.user.is_superuser %}
                                     <tr onclick="url_to_judge_team({{ target_team.id }})" class="cursor_p">
                                     <td data-sort="{{ target_team.id }}">
-                                    {{ target_team.team_name }}
-                                    {% if target_team.stu_check %}
-                                        <i class="fas fa-check-circle" style="color:mediumseagreen"></i>
-                                    {% else %}
-                                        <i class="fas fa-times-circle" style="color: lightcoral"></i>
-                                    {% endif %}
+                                        {{ target_team.team_name }}
                                     </td>
+                                    {% if target_team.stu_check %}
+                                        <td data-sort="1"><i class="fas fa-check-circle" style="color:mediumseagreen"></i></td>
+                                    {% elif target_team.video_link == '' and target_team.readme == '' and target_team.affidavit == '' %}
+                                        <td data-sort="2"><i class="fas fa-ban" style="color:coral"></i></td>
+                                    {% else %}
+                                        <td data-sort="3"><i class="fas fa-times-circle" style="color: lightcoral"></i></td>
+                                    {% endif %}
                                     <td>{{ target_team.team_topic|slice:":200" }}</td>
                                     <td> {{ tmp_team.score_applicability }}</td>
                                     <td> {{ tmp_team.score_creativity }}</td>
@@ -167,14 +178,13 @@
                                     <td> {{ target_team.team_group }}</td>
                                 {% else %}
                                     {% if tmp_team.judger_name == request.user.judgerprofile.judger_realname %}
-                                    <tr onclick="url_to_judge_team({{ target_team.id }})" class="cursor_p">
                                     <td data-sort="{{ target_team.id }}">
-                                    {{ target_team.team_name }}
-                                    {% if target_team.stu_check %}
-                                        <i class="fas fa-check-circle" style="color:mediumseagreen"></i>
-                                    {% else %}
-                                        <i class="fas fa-times-circle" style="color: lightcoral"></i>
-                                    {% endif %}
+                                        {{ target_team.team_name }}
+                                        {% if target_team.stu_check %}
+                                            <i class="fas fa-check-circle" style="color:mediumseagreen"></i>
+                                        {% else %}
+                                            <i class="fas fa-times-circle" style="color: lightcoral"></i>
+                                        {% endif %}
                                     </td>
                                     <td>{{ target_team.team_topic|slice:":200" }}</td>
                                     <td> {{ tmp_team.score_applicability }}</td>

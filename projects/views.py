@@ -29,6 +29,12 @@ def judge_list(request):
 
         if request.user.is_superuser:
             target_teams = Team.objects.all().order_by('id')
+            for target_team in target_teams:
+                target_score = TeamScore.objects.filter(team__team_name=target_team.team_name,
+                                                        judger_name='superuser')
+                if not target_score:
+                    TeamScore.objects.get_or_create(team=target_team,
+                                                    judger_name='superuser')
         else:
             target_teams = Team.objects.filter(team_group=request.user.judgerprofile.judger_group).order_by('id')
             for target_team in target_teams:
@@ -52,15 +58,16 @@ def judge_detail(request, judge_id):
         for target in target_teams:
             id_list.append(target.id)
         target_team = Team.objects.get(id=judge_id)
-        target_score = TeamScore.objects.filter(team__team_name=target_team.team_name,
-                                                judger_name=request.user.judgerprofile.judger_realname)
-        if not target_score:
-            TeamScore.objects.get_or_create(team=target_team,
-                                            judger_name=request.user.judgerprofile.judger_realname)
-            target_score = TeamScore.objects.filter(team__team_name=target_team.team_name,
-                                                    judger_name=request.user.judgerprofile.judger_realname)
+        # target_score = TeamScore.objects.filter(team__team_name=target_team.team_name,
+        #                                         judger_name=request.user.judgerprofile.judger_realname)
+        # if not target_score:
+        #     TeamScore.objects.get_or_create(team=target_team,
+        #                                     judger_name=request.user.judgerprofile.judger_realname)
+        #     target_score = TeamScore.objects.filter(team__team_name=target_team.team_name,
+        #                                             judger_name=request.user.judgerprofile.judger_realname)
         if request.user.is_superuser:
-
+            target_score = TeamScore.objects.filter(team__team_name=target_team.team_name,
+                                                    judger_name='superuser')
             target_members = TeamMember.objects.filter(team=target_team)
             if request.method == "POST":
                 judge = JudgeForm(request.POST, instance=target_score[0])
@@ -69,10 +76,10 @@ def judge_detail(request, judge_id):
                 if judge.is_valid():
                     judge.save()
                     total_team = TeamScore.objects.get(team__team_name=target_team.team_name,
-                                                       judger_name=request.user.judgerprofile.judger_realname)
+                                                       judger_name='superuser')
                     total_team.total_score = total_team.score_applicability + total_team.score_creativity \
                                              + total_team.score_challenge + total_team.score_completion
-                    total_team.judger_name = request.user.judgerprofile.judger_realname
+                    total_team.judger_name = 'superuser'
                     total_team.save()
                 else:
                     err_msg = [(k, v[0]) for k, v in judge.errors.items()]
@@ -129,6 +136,8 @@ def judge_detail(request, judge_id):
                 judge = JudgeForm(instance=target_score[0])
                 stu_check = CheckTeamForm(instance=target_team)
         else:
+            target_score = TeamScore.objects.filter(team__team_name=target_team.team_name,
+                                                    judger_name=request.user.judgerprofile.judger_realname)
             if request.method == "POST":
                 judge = JudgeForm(request.POST, instance=target_score[0])
                 if judge.is_valid():
