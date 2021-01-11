@@ -194,7 +194,7 @@ def request_reset(request):
             active_key = user.username
             token = '{}'.format(uuid.uuid4().hex[:10])
             if user.is_active:
-                tprofile = UserProfile.objects.get(user=user)
+                tprofile,cflag = UserProfile.objects.get_or_create(user=user)
                 tprofile.check_code = token
                 tprofile.save()
                 tmp_server = MailServer.objects.get(id=1)

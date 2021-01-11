@@ -29,12 +29,12 @@ def judge_list(request):
 
         if request.user.is_superuser:
             target_teams = Team.objects.all().order_by('id')
-            for target_team in target_teams:
-                target_score = TeamScore.objects.filter(team__team_name=target_team.team_name,
-                                                        judger_name='superuser')
-                if not target_score:
-                    TeamScore.objects.get_or_create(team=target_team,
-                                                    judger_name='superuser')
+            # for target_team in target_teams:
+            #     target_score = TeamScore.objects.filter(team__team_name=target_team.team_name,
+            #                                             judger_name='superuser')
+            #     if not target_score:
+            #         TeamScore.objects.get_or_create(team=target_team,
+            #                                         judger_name='superuser')
         else:
             target_teams = Team.objects.filter(team_group=request.user.judgerprofile.judger_group).order_by('id')
             for target_team in target_teams:

@@ -20,24 +20,31 @@
             text-align: center;
         }
 
-        #judge_modal tbody tr.level td {
-            font-size: 16px;
+        #judge_modal tbody tr td {
+            font-size: 18px;
             padding: 5px 12px 5px 12px;
         }
 
-        #judge_modal tbody tr.level td:nth-child(1) {
+        #judge_modal tbody tr.level td {
+            background-color: rgba(57, 113, 151, 1);
+            color: white;
+            font-weight: 900;
+            padding: 20px 0px 20px 0px;
+        }
+
+        #judge_modal tbody tr.level1 td {
             background-color: rgba(57, 113, 151, 0.8);
         }
 
-        #judge_modal tbody tr.level td:nth-child(2) {
+        #judge_modal tbody tr.level2 td {
             background-color: rgba(57, 113, 151, 0.6);
         }
 
-        #judge_modal tbody tr.level td:nth-child(3) {
+        #judge_modal tbody tr.level3 td {
             background-color: rgba(57, 113, 151, 0.4);
         }
 
-        #judge_modal tbody tr.level td:nth-child(4) {
+        #judge_modal tbody tr.level4 td {
             background-color: rgba(57, 113, 151, 0.2);
         }
     </style>
@@ -53,62 +60,63 @@
                     <table class="table table-bordered">
                         <thead>
                         <tr>
-                            <th scope="col">項目</th>
                             <th colspan="4">建議評分</th>
                         </tr>
                         </thead>
                         <tbody>
+                        <tr class="level">
+                            <td width="25%">應用性30%</td>
+                            <td width="25%">創意性30%</td>
+                            <td width="25%">挑戰性20%</td>
+                            <td width="25%">完成度20%</td>
+                        </tr>
                         <tr>
-                            <td scope="row" rowspan="2">應用性30%</td>
                             <td>此專案提及科系、專業、大眾(三者其一)，且對於此主題之應用能有效解決其議題。</td>
+                            <td>創作理念表達完整且清晰，市面上沒有類似的題材。</td>
+                            <td>程式具備相當邏輯複雜度，且應用部分特別技術。</td>
+                            <td>影片與書面報告製作優良，且程式已完成八成以上。</td>
+                        </tr>
+                        <tr class="level1">
+                            <td>30分~25分</td>
+                            <td>30分~25分</td>
+                            <td>20分~15分</td>
+                            <td>20分~15分</td>
+                        </tr>
+                        <tr>
                             <td>此專案提及特定團體、個人需求(兩者其一)，且對於此主題之應用能有效解決其議題。</td>
-                            <td>此專案有提及使用團體(前述五者)，但主題之應用僅能部分解決其議題。</td>
-                            <td>此專案無提及使用團體(任何族群)，或有提及卻無法解決其議題。</td>
-                        </tr>
-                        <tr class="level">
-                            <td>30分~25分</td>
-                            <td>25分~20分</td>
-                            <td>20分~15分</td>
-                            <td>15分~1分</td>
-                        </tr>
-                        <tr>
-                            <td scope="row" rowspan="2">創意性30%</td>
-                            <td>此專案無提及使用團體(任何族群)，或有提及卻無法解決其議題。</td>
                             <td>創作理念表達完整且清晰，市面上有少許類似的題材，但隊伍有針對特定方向加深應用。</td>
-                            <td>創作理念表達模糊，或市面上已有許多類似的題材但隊伍有針對特定方向加深應用。</td>
-                            <td>創作理念表達模糊，或市面上已有許多類似的題材且隊伍也沒有加深應用。</td>
+                            <td>程式具備相當邏輯複雜度，或應用部分特別技術。</td>
+                            <td>影片與書面報告製作優良，但程式僅完成六成至八成。</td>
                         </tr>
-                        <tr class="level">
-                            <td>30分~25分</td>
+                        <tr class="level2">
                             <td>25分~20分</td>
-                            <td>20分~15分</td>
-                            <td>15分~1分</td>
+                            <td>25分~20分</td>
+                            <td>15分~10分</td>
+                            <td>15分~10分</td>
                         </tr>
                         <tr>
-                            <td scope="row" rowspan="2">挑戰性20%</td>
-                            <td>程式具備相當邏輯複雜度，且應用部分特別技術。"</td>
-                            <td>程式具備相當邏輯複雜度，或應用部分特別技術。</td>
+                            <td>此專案有提及使用團體(前述五者)，但主題之應用僅能部分解決其議題。</td>
+                            <td>創作理念表達模糊，或市面上已有許多類似的題材但隊伍有針對特定方向加深應用。</td>
                             <td>程式相對簡單，但畫面設計完善。</td>
-                            <td>程式相對簡單，且畫面設計簡陋。</td>
+                            <td>影片與書面報告製作普通，或程式僅完成四成至六成。</td>
 
                         </tr>
-                        <tr class="level">
+                        <tr class="level3">
                             <td>20分~15分</td>
-                            <td>15分~10分</td>
+                            <td>20分~15分</td>
                             <td>10分~5分</td>
-                            <td>5分~1分</td>
+                            <td>10分~5分</td>
                         </tr>
                         <tr>
-                            <td scope="row" rowspan="2">完成度20%</td>
-                            <td>影片與書面報告製作優良，且程式已完成八成以上。</td>
-                            <td>影片與書面報告製作優良，但程式僅完成六成至八成。</td>
-                            <td>影片與書面報告製作普通，或程式僅完成四成至六成。</td>
+                            <td>此專案無提及使用團體(任何族群)，或有提及卻無法解決其議題。</td>
+                            <td>創作理念表達模糊，或市面上已有許多類似的題材且隊伍也沒有加深應用。</td>
+                            <td>程式相對簡單，且畫面設計簡陋。</td>
                             <td>影片與書面報告製作不佳，或程式僅完成四成以下。</td>
                         </tr>
-                        <tr class="level">
-                            <td>20分~15分</td>
-                            <td>15分~10分</td>
-                            <td>10分~5分</td>
+                        <tr class="level4">
+                            <td>15分~1分</td>
+                            <td>15分~1分</td>
+                            <td>5分~1分</td>
                             <td>5分~1分</td>
                         </tr>
                         </tbody>
@@ -124,11 +132,11 @@
         <div class="container">
             <div class="content-box">
                 <h2 class="title">審查隊伍</h2>
-                    {% if request.user.judgerprofile.check_judger %}
+                {% if request.user.judgerprofile.check_judger %}
                     <p class="sub_title">{{ request.user.judgerprofile.judger_realname }} 老師您好，以下為您負責之審查隊伍。<br>
-                    {% else %}
+                        {% else %}
                     <p class="sub_title">{{ request.user.username }} 老師您好，以下為您負責之審查隊伍。<br>
-                    {% endif %}
+                        {% endif %}
                     請您於110/1/20(三)前完成評審，相關評審標準您可以參考 <a href="" data-toggle="modal" data-target="#exampleModal">評分建議表</a><br>
                     如有其他問題歡迎聯繫<a href="mailto:pinhchen@mail.fcu.edu.tw">pinhchen@mail.fcu.edu.tw</a> (陳助理)</p>
             </div>
