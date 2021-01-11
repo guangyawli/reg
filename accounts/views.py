@@ -17,6 +17,8 @@ from django.template import loader
 
 def index(request):
     if request.user.is_authenticated:
+        if request.user.judgerprofile.check_judger:
+            return redirect('judge_list')
         check_team = Team.objects.filter(leader=request.user)
         if check_team.exists():
             if request.method == "GET":

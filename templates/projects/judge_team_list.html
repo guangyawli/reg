@@ -124,7 +124,11 @@
         <div class="container">
             <div class="content-box">
                 <h2 class="title">審查隊伍</h2>
-                <p class="sub_title">{{ request.user.username }} 老師您好，以下為您負責之審查隊伍。<br>
+                    {% if request.user.judgerprofile.check_judger %}
+                    <p class="sub_title">{{ request.user.judgerprofile.judger_realname }} 老師您好，以下為您負責之審查隊伍。<br>
+                    {% else %}
+                    <p class="sub_title">{{ request.user.username }} 老師您好，以下為您負責之審查隊伍。<br>
+                    {% endif %}
                     請您於110/1/20(三)前完成評審，相關評審標準您可以參考 <a href="" data-toggle="modal" data-target="#exampleModal">評分建議表</a><br>
                     如有其他問題歡迎聯繫<a href="mailto:pinhchen@mail.fcu.edu.tw">pinhchen@mail.fcu.edu.tw</a> (陳助理)</p>
             </div>
@@ -156,8 +160,8 @@
                         <tbody>
                         {% for target_team in target_teams %}
                             {% for tmp_team in target_team.tscore.all %}
-                                {% if request.user.is_superuser %}
-                                    <tr onclick="url_to_judge_team({{ target_team.id }})" class="cursor_p">
+                        <tr onclick="url_to_judge_team({{ target_team.id }})" class="cursor_p">
+                        {% if request.user.is_superuser %}
                                     <td data-sort="{{ target_team.id }}">
                                         {{ target_team.team_name }}
                                     </td>

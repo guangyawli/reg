@@ -54,7 +54,7 @@ def judge_list(request):
 def judge_detail(request, judge_id):
     if request.user.is_superuser or request.user.judgerprofile.check_judger:
         id_list = []
-        target_teams = Team.objects.all().order_by('id')
+        target_teams = Team.objects.filter(team_group=request.user.judgerprofile.judger_group).order_by('id')
         for target in target_teams:
             id_list.append(target.id)
         target_team = Team.objects.get(id=judge_id)
