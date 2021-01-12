@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from idea.models import Team, TeamMember
-from projects.models import TeamScore, JudgerProfile
+from projects.models import TeamScore, JudgerProfile, FinalTeamScore
 from projects.forms import JudgeForm, CheckTeamForm
 from accounts.forms import OnlyLeaderForm
 from django.contrib import messages
@@ -28,7 +28,7 @@ def judge_list(request):
             JudgerProfile.objects.get_or_create(user=request.user, judger_realname=request.user.username)
 
         if request.user.is_superuser:
-            target_teams = Team.objects.all().order_by('id')
+            target_teams = Team.objects.filter(stu_check=True).exclude(team_group=None).order_by('id')
             # for target_team in target_teams:
             #     target_score = TeamScore.objects.filter(team__team_name=target_team.team_name,
             #                                             judger_name='superuser')
@@ -66,8 +66,7 @@ def judge_detail(request, judge_id):
         #     target_score = TeamScore.objects.filter(team__team_name=target_team.team_name,
         #                                             judger_name=request.user.judgerprofile.judger_realname)
         if request.user.is_superuser:
-            target_score = TeamScore.objects.filter(team__team_name=target_team.team_name,
-                                                    judger_name='superuser')
+            target_score = TeamScore.objects.filter(team__team_name=target_team.team_name)
             target_members = TeamMember.objects.filter(team=target_team)
             if request.method == "POST":
                 judge = JudgeForm(request.POST, instance=target_score[0])
@@ -185,3 +184,40 @@ def judge_detail(request, judge_id):
 
     else:
         return redirect('home')
+
+
+@login_required
+def super_list(request):
+    if request.user.is_superuser:
+        if not JudgerProfile.objects.filter(user=request.user):
+            JudgerProfile.objects.get_or_create(user=request.user, judger_realname=request.user.username)
+        wrong_ids = []
+        target_teams = Team.objects.filter(stu_check=True).exclude(team_group=None).order_by('id')
+        for target_team in target_teams:
+            target_final, cflag = FinalTeamScore.objects.get_or_create(team=target_team)
+            score_data = TeamScore.objects.filter(team=target_team)
+
+            if score_data.count() == 2:
+                target_final.score_applicability = ((float(score_data[0].score_applicability) +
+                                                    float(score_data[1].score_applicability)) / 2)
+                target_final.score_creativity = ((float(score_data[0].score_creativity) +
+                                                 float(score_data[1].score_creativity)) / 2)
+                target_final.score_challenge = ((float(score_data[0].score_challenge) +
+                                                float(score_data[1].score_challenge)) / 2)
+                target_final.score_completion = ((float(score_data[0].score_completion) +
+                                                 float(score_data[1].score_completion)) / 2)
+                target_final.total_score = target_final.score_applicability+target_final.score_creativity + \
+                                           target_final.score_challenge+target_final.score_completion
+                target_final.save()
+            elif score_data.count() == 0:
+                wrong_ids.append(target_team.team_name)
+        # print(wrong_ids)
+        # if wrong_ids:
+        #     messages.add_message(request, messages.ERROR, wrong_ids)
+        final_teams = FinalTeamScore.objects.all()
+        return render(request, 'projects/super_team_list.html', {'target_teams': final_teams,
+                                                                 'coding101_url': request.get_host(),
+                                                                 'wrong_ids': wrong_ids})
+    else:
+        return redirect('home')
+

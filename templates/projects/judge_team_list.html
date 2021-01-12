@@ -138,7 +138,7 @@
                     <p class="sub_title">{{ request.user.username }} 老師您好，以下為您負責之審查隊伍。<br>
                         {% endif %}
                     請您於110/1/20(三)前完成評審，相關評審標準您可以參考 <a href="" data-toggle="modal" data-target="#exampleModal">評分建議表</a><br>
-                    如有其他問題歡迎聯繫<a href="mailto:pinhchen@mail.fcu.edu.tw">pinhchen@mail.fcu.edu.tw</a> (陳助理)</p>
+                    如有其他問題歡迎聯繫<a href="mailto:gyli@mail.fcu.edu.tw">gyli@mail.fcu.edu.tw</a> (李助理)</p>
             </div>
         </div>
     </section>
@@ -224,10 +224,14 @@
             location.href = url;
         }
     </script>
-
     <script type="text/javascript" charset="utf8"
             src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
     <script>
+        function getQueryString(key) {
+            var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)");
+            var result = window.location.search.substr(1).match(reg);
+            return result ? decodeURIComponent(result[2]) : null;
+        }
         $(document).ready(function () {
             $('#team_list').DataTable({
                 "pageLength": 25,
@@ -245,6 +249,11 @@
                     }
                 }
             });
+            //如果有搜尋的隊伍
+            if(getQueryString('name')){
+                $('#team_list').DataTable().search(getQueryString('name')).draw();
+            }
+
         });
     </script>
 {% endblock %}

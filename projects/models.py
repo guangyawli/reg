@@ -29,3 +29,19 @@ class TeamScore(models.Model):
 
     def __str__(self):
         return self.team.team_name
+
+
+class FinalTeamScore(models.Model):
+    team = models.OneToOneField(Team, on_delete=models.CASCADE, related_name='final_team')
+    score_applicability = models.FloatField(blank=True, default=0, verbose_name='應用性', validators=[MinValueValidator(0),
+                                                                                         MaxValueValidator(30)])
+    score_creativity = models.FloatField(blank=True, default=0, verbose_name='創意性', validators=[MinValueValidator(0),
+                                                                                      MaxValueValidator(30)])
+    score_challenge = models.FloatField(blank=True, default=0, verbose_name='挑戰性', validators=[MinValueValidator(0),
+                                                                                     MaxValueValidator(20)])
+    score_completion = models.FloatField(blank=True, default=0, verbose_name='完成度', validators=[MinValueValidator(0),
+                                                                                      MaxValueValidator(20)])
+    total_score = models.FloatField(default=0, verbose_name='隊伍總分')
+
+    def __str__(self):
+        return self.team.team_name

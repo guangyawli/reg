@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}審查隊伍{% endblock %}
+{% block STYLEcontent %}
+    <link rel="stylesheet" href=" https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css"/>
+    <link rel="stylesheet" href="{% static 'css/table.css' %}">
+    <style>
+        #judge_modal {
+            font-weight: 900;
+        }
+
+        #judge_modal thead th {
+            text-align: center;
+            background-color: rgba(57, 113, 151, 0.1);
+        }
+
+        #judge_modal tbody tr {
+            font-size: 12px;
+            background-color: rgba(57, 113, 151, 0.1);
+            text-align: center;
+        }
+
+        #judge_modal tbody tr td {
+            font-size: 18px;
+            padding: 5px 12px 5px 12px;
+        }
+
+        #judge_modal tbody tr.level td {
+            background-color: rgba(57, 113, 151, 1);
+            color: white;
+            font-weight: 900;
+            padding: 20px 0px 20px 0px;
+        }
+
+        #judge_modal tbody tr.level1 td {
+            background-color: rgba(57, 113, 151, 0.8);
+        }
+
+        #judge_modal tbody tr.level2 td {
+            background-color: rgba(57, 113, 151, 0.6);
+        }
+
+        #judge_modal tbody tr.level3 td {
+            background-color: rgba(57, 113, 151, 0.4);
+        }
+
+        #judge_modal tbody tr.level4 td {
+            background-color: rgba(57, 113, 151, 0.2);
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <!-- Modal -->
+    <section>
+        <div class="container">
+            <div class="content-box">
+                <h2 class="title">最終成績</h2>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="container">
+            <div class="content-box table-responsive">
+                <div class="table_style_custom">
+                    <table class="table table-striped" id="super_list">
+                        <thead>
+                        <tr>
+                            <th>狀態</th>
+                            <th>隊名</th>
+                            <th>學校</th>
+                            <th>指導教授</th>
+                            <th style="font-size: 10px;">應用性</th>
+                            <th style="font-size: 10px;">創意性</th>
+                            <th style="font-size: 10px;">挑戰性</th>
+                            <th style="font-size: 10px;">完成性</th>
+                            <th style="font-size: 10px;">總分</th>
+                            <th style="font-size: 10px;">組別</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for target_team in target_teams %}
+                        <tr onclick="url_to_judge_team('{{ target_team.team.team_name }}')" class="cursor_p">
+                            <td>
+                                {% if target_team.team.team_name in wrong_ids %}
+                                    <span class="badge badge-danger">未審閱</span>
+                                {% elif target_team.total_score == 0 %}
+                                    <span class="badge badge-warning">未評分</span>
+                                {% else %}
+                                    <span class="badge badge-success">已審閱</span>
+                                {% endif %}
+                            </td>
+                            <td data-sort="{{ target_team.id }}">
+                                {{ target_team.team.team_name }}
+                            </td>
+                            <td> {{ target_team.team.team_school }}</td>
+                            <td> {{ target_team.team.team_teacher }}</td>
+                            <td> {{ target_team.score_applicability }}</td>
+                            <td> {{ target_team.score_creativity }}</td>
+                            <td> {{ target_team.score_challenge }}</td>
+                            <td> {{ target_team.score_completion }}</td>
+                            <td> {{ target_team.total_score }}</td>
+                            <td> {{ target_team.team.team_group }}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block JScontent %}
+    <script>
+        function url_to_judge_team(name) {
+            url = 'http://{{ coding101_url }}/projects/judge_list?name=' + name;
+            location.href = url;
+        }
+    </script>
+
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#super_list').DataTable({
+                "pageLength": 200,
+                "language": {
+                    "lengthMenu": "顯示每 _MENU_ 筆資料/頁",
+                    "zeroRecords": "找尋不到資料，請確認輸入是否有誤。",
+                    "info": "目前顯示第 _PAGE_ 頁，全部資料共 _PAGES_ 頁",
+                    "infoEmpty": "無任何相符資料",
+                    "infoFiltered": "(總資料為 _MAX_ 筆。)",
+                    "search": " 搜尋: ",
+                    "searchPlaceholder": "請輸入隊伍名稱或主題",
+                    "paginate": {
+                        "previous": "上一頁",
+                        "next": "下一頁",
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
