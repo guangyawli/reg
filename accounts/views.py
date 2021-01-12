@@ -135,7 +135,9 @@ def sign_in(request):
                 login(request, user)
                 if request.user.is_active:
                     messages.add_message(request, messages.SUCCESS, '登入成功')
-                    if JudgerProfile.objects.filter(user=request.user):
+                    if request.user.is_superuser:
+                        return redirect('judge_list')
+                    elif JudgerProfile.objects.filter(user=request.user):
                         check = JudgerProfile.objects.get(user=request.user)
                         if check.check_judger is True:
                             return redirect('judge_list')
