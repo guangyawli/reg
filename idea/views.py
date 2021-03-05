@@ -5,6 +5,8 @@ from .forms import TeamDataForm, TeamMember, TeamMemberForm, AddTeamMemberForm, 
 from .models import Team
 
 from django.contrib import messages
+
+
 # Create your views here.
 
 
@@ -17,20 +19,37 @@ def file_list(request):
     check_team = Team.objects.filter(leader=request.user).exists()
     if check_team:
         target_team = Team.objects.get(leader=request.user)
-        if target_team.readme or target_team.video_link or target_team.affidavit:
+        if target_team.readme or target_team.present or target_team.video_link or target_team.ppt_link:
             files = target_team
             if files.video_link != '':
-                video_id = files.video_link.split('?v=')[1]
+                if 'watch?v=' in files.video_link:
+                    video_id = files.video_link.split('?v=')[1]
+                    video_id = video_id.split('&t')[0]
+                elif 'youtu.be/' in files.video_link:
+                    video_id = files.video_link.split('youtu.be/')[1]
+                else:
+                    video_id = ''
                 video_embed_link = 'https://www.youtube.com/embed/' + video_id
             else:
                 video_embed_link = ''
+            if files.ppt_link != '':
+                if 'pub?' in files.ppt_link:
+                    ppt_id = files.ppt_link.split('pub?')[0]
+                    ppt_embed_link = ppt_id + 'embed?start=false&loop=false&delayms=3000'
+                elif 'embed?' in files.ppt_link:
+                    ppt_embed_link = files.ppt_link
+                else:
+                    ppt_embed_link = ''
+            else:
+                ppt_embed_link = ''
         else:
             return redirect('add_files')
     else:
         return redirect('add_team')
 
-    return render(request, 'idea/file_list.html', {'files': files, 'video_embed_link': video_embed_link,
-                                                   'target_team': target_team})
+    return render(request, 'idea/file_list.html',
+                  {'files': files, 'video_embed_link': video_embed_link, 'ppt_embed_link': ppt_embed_link,
+                   'target_team': target_team})
 
 
 @login_required

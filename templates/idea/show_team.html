@@ -36,11 +36,11 @@
                                 </div>
                           </div>
                           <div class="col-md-2">
-                              {% if target_team.stu_check != True %}
-                              <button type="button" onclick="edit_team('team')" class="btn btn-outline-info mb-1" style="width: 100%">
-                                  <i class="far fa-edit"></i>編輯
-                              </button>
-                              {% endif %}
+{#                              {% if target_team.stu_check != True %}#}
+{#                              <button type="button" onclick="edit_team('team')" class="btn btn-outline-info mb-1" style="width: 100%">#}
+{#                                  <i class="far fa-edit"></i>編輯#}
+{#                              </button>#}
+{#                              {% endif %}#}
                           </div>
                       </div>
                   </div>
@@ -89,11 +89,11 @@
                                       </div>
                                       <div class="col-md-2">
                                           {% if forloop.first %}
-                                              {% if target_team.stu_check != True %}
-                                              <button type="button" onclick="edit_team('player')" class="btn btn-outline-info mb-1" style="width: 100%">
-                                                  <i class="far fa-edit"></i>編輯
-                                              </button>
-                                              {% endif %}
+{#                                              {% if target_team.stu_check != True %}#}
+{#                                              <button type="button" onclick="edit_team('player')" class="btn btn-outline-info mb-1" style="width: 100%">#}
+{#                                                  <i class="far fa-edit"></i>編輯#}
+{#                                              </button>#}
+{#                                              {% endif %}#}
                                           {% else %}
                                               <form class="navbar-right navbar-form" method="post" action="{% url 'modify_member' %}">
                                                   {% csrf_token %}
@@ -119,17 +119,17 @@
                            </div>
                           {% endfor %}
                       {% endif %}
-                    {% if target_team.stu_check != True %}
-                    {% if real_member_num < 5%}
-                        <div class="content-box table-responsive cursor_p" onclick="location.href='{% url 'add_member' %}';" style="padding: 10px 20px 10px 20px;background-color:rgba(0,0,0,0.05);text-align: center;">
-                            <div>
-                                 <h4 class="fw9">
-                                     <i class="fas fa-plus-circle"></i> 新增隊員{{ real_member_num|add:"1" }}
-                                 </h4>
-                            </div>
-                        </div>
-                    {% endif %}
-                    {% endif %}
+{#                    {% if target_team.stu_check != True %}#}
+{#                    {% if real_member_num < 5%}#}
+{#                        <div class="content-box table-responsive cursor_p" onclick="location.href='{% url 'add_member' %}';" style="padding: 10px 20px 10px 20px;background-color:rgba(0,0,0,0.05);text-align: center;">#}
+{#                            <div>#}
+{#                                 <h4 class="fw9">#}
+{#                                     <i class="fas fa-plus-circle"></i> 新增隊員{{ real_member_num|add:"1" }}#}
+{#                                 </h4>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    {% endif %}#}
+{#                    {% endif %}#}
                   </div>
             </div>
         </div>

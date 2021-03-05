@@ -14,7 +14,7 @@
                             <h2 class="title">{{ form.team_name }}</h2>
                             <p class="sub_title">{{ form.team_topic }}</p>
                         </div>
-                        <div class="col-12 col-md-3">
+                        <div class="col-12 col-md-4">
                             <div class="row">
                                 <div class="col-8">
                                     <h3 class="title" style="cursor: pointer"
@@ -25,11 +25,6 @@
                                             <i class="fas fa-times-circle" style="color: lightcoral"></i>
                                         {% endif %}
                                     </h3>
-                                </div>
-                                <div class="col-4" style="text-align: end;align-self: flex-end;">
-                                    <h5 class="title" style="margin-bottom: 0px;cursor: pointer"
-                                        onclick="javascript:location.href='{% url 'show_team' %}'"><span
-                                            class="badge badge-secondary">編輯</span></h5>
                                 </div>
                             </div>
                             <hr>
@@ -45,11 +40,11 @@
                                 <p class="sub_title">尚未完成隊員資料填寫，<a href="{% url 'show_team' %}">立即開始!</a></p>
                             {% endif %}
                         </div>
-                        <div class="col-12 col-md-3">
+                        <div class="col-12 col-md-4">
                             <div class="row">
                                 <div class="col-8">
-                                    <h3 class="title">競賽文件
-                                        {% if target_team.affidavit and target_team.video_link and target_team.readme %}
+                                    <h3 class="title">複賽競賽文件
+                                        {% if target_team.ppt_link and target_team.video_link and target_team.readme and target_team.present %}
                                             <i class="fas fa-check-circle" style="color:mediumseagreen"></i>
                                         {% else %}
                                             <i class="fas fa-times-circle" style="color: lightcoral"></i>
@@ -64,13 +59,23 @@
                             </div>
                             <hr>
                             <h5>
-                                <span class="badge badge-info">競賽切結書</span>
-                                {% if target_team.affidavit %}
+                                <span class="badge badge-info">作品說明書</span>
+                                {% if target_team.readme %}
                                     <i class="fas fa-check-circle" style="color:mediumseagreen"></i>
                                 {% else %}
                                     <i class="fas fa-times-circle" style="color: lightcoral"></i>
                                 {% endif %}
                             </h5>
+
+                            <h5>
+                                <span class="badge badge-info">A1海報(直式)</span>
+                                {% if target_team.present %}
+                                    <i class="fas fa-check-circle" style="color:mediumseagreen"></i>
+                                {% else %}
+                                    <i class="fas fa-times-circle" style="color: lightcoral"></i>
+                                {% endif %}
+                            </h5>
+
                             <h5>
                                 <span class="badge badge-info">Youtube影片</span>
                                 {% if target_team.video_link %}
@@ -79,45 +84,22 @@
                                     <i class="fas fa-times-circle" style="color: lightcoral"></i>
                                 {% endif %}
                             </h5>
+
                             <h5>
-                                <span class="badge badge-info">作品說明書</span>
-                                {% if target_team.readme %}
+                                <span class="badge badge-info">Google 簡報</span>
+                                {% if target_team.ppt_link %}
                                     <i class="fas fa-check-circle" style="color:mediumseagreen"></i>
                                 {% else %}
                                     <i class="fas fa-times-circle" style="color: lightcoral"></i>
                                 {% endif %}
                             </h5>
-                            <a href="https://sites.google.com/mail.fcu.edu.tw/2021coding101/download?authuser=0"><p class="sub_title">相關檔案連結</p></a>
+
                         </div>
-                        <div class="col-12 col-md-3">
-                            <h3 class="title">初賽資料驗證
-                                {% if target_team.stu_check %}
-                                    <i class="fas fa-check-circle" style="color:mediumseagreen"></i>
-                                {% else %}
-                                    <i class="fas fa-times-circle" style="color: lightcoral"></i>
-                                {% endif %}
-                            </h3>
+                        <div class="col-12 col-md-4">
+                            <h3 class="title">複賽資訊</h3>
                             <hr>
-                            <p class="sub_title">擬訂於110/1/11(一)前完成驗證</p>
-                            <p class="sub_title">將審查『隊伍成員』與『繳交文件』是否符合資格，檢驗期間您可能會接到由本單位寄送之電子郵件或是接到我們的電話。</p>
+                            <p class="sub_title">110/3/13(六)國立台灣大學</p>
                         </div>
-                        <div class="col-12 col-md-3">
-                            <h3 class="title">初賽結果</h3>
-                            <hr>
-                            <p class="sub_title">擬訂於110/1/22(五)公布</p>
-                        </div>
-                        {% complete target_members target_team.affidavit target_team.video_link target_team.readme as complete_rate %}
-                        {% if complete_rate != 0 %}
-                            <div class="col-6 d-none d-md-block d-lg-block " style="margin-top: 50px">
-                                <div class="progress">
-                                    <div id="complete-bar" class="progress-bar bg-success" role="progressbar"
-                                         aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
-                                         style="width:{{ complete_rate }}%">
-                                        {{ complete_rate }}%
-                                    </div>
-                                </div>
-                            </div>
-                        {% endif %}
                     </div>
                 </div>
             </div>

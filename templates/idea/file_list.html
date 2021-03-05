@@ -20,16 +20,14 @@
 {% endblock %}
 {% block content %}
     {% if files %}
-      <section class="bottom" id="table-section">
+      <section class="bottom" id="table-section" style="margin-bottom: 50px;">
         <div class="container">
             <h2 class="title">我的作品</h2>
             <p class="sub_title">檢視我的個人作品</p>
             <div class="content-box table-responsive">
-                {% if target_team.stu_check != True %}
                 <button class="btn btn-outline-info mb-1" onclick="location.href='{% url 'add_files' %}'"  type="submit"><i class="far fa-edit"></i>
                    編輯
                 </button>
-                {% endif %}
                 <div class="row">
                     <div class="col-12 col-md-3">
                         <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
@@ -38,6 +36,9 @@
                           </a>
                           <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">
                               <h5><span class="badge badge-secondary">作品影片</span></h5>
+                          </a>
+                          <a class="nav-link" id="v-pills-ppt-tab" data-toggle="pill" href="#v-pills-ppt" role="tab" aria-controls="v-pills-ppt" aria-selected="false">
+                              <h5><span class="badge badge-secondary">作品簡報</span></h5>
                           </a>
                         </div>
                     </div>
@@ -52,8 +53,8 @@
                               {% else %}
                                   <p class="sub_title">未上傳</p>
                               {% endif %}
-                              <span class="badge badge-secondary">競賽切結書</span>
-                              {% if files.affidavit %}
+                              <span class="badge badge-secondary">海報</span>
+                              {% if files.present %}
                                     <div class="page_title fw9" id="pdf-box">
                                         <canvas id="pdf2_canvas"></canvas>
                                     </div>
@@ -70,17 +71,28 @@
                                   <p class="sub_title">未上傳影片</p>
                               {% endif %}
                           </div>
+                          <div class="tab-pane fade" id="v-pills-ppt" role="tabpanel" aria-labelledby="v-pills-ppt-tab">
+                              {% if files.ppt_link %}
+                                  <div class="youtube_container">
+                                    <iframe src="{{ ppt_embed_link }}" frameborder="0" height="480px" width="100%" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+                                  </div>
+                              {% else %}
+                                  <p class="sub_title">未上傳影片</p>
+                              {% endif %}
+                          </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
       </section>
+        <section style="height:100px">
+
+        </section>
     {% else %}
         <section class="bottom" id="table-section">
         <div class="container">
             <h2 class="title">檔案上傳</h2>
-            <p class="sub_title">新增檔案</p>
             <div class="content-box table-responsive">
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
@@ -94,31 +106,38 @@
                         </div>
                         <div class="col-12 mb-3 pb-20">
                           <label>
-                              <h5><span class="badge badge-info">作品說明書</span></h5>
+                              <h5><span class="badge badge-info">作品說明書(PDF)</span></h5>
                           </label>
                             <br>
                           {{ post_form.readme }}
                         </div>
                         <div class="col-12 mb-3 pb-20">
                           <label>
-                              <h5><span class="badge badge-info">切結書</span></h5>
+                              <h5><span class="badge badge-info">A1海報(PDF)</span></h5>
                           </label>
                             <br>
-                          {{ post_form.affidavit }}
+                          {{ post_form.present }}
                         </div>
                         <div class="col-12 mb-3 pb-20">
                           <label>
-                              <h5><span class="badge badge-info">影片連結</span></h5>
+                              <h5><span class="badge badge-info">簡報(請轉傳成 Google 簡報)</span></h5>
+                          </label>
+                            <br>
+                          {{ post_form.ppt_link }}
+                        </div>
+                        <div class="col-12 mb-3 pb-20">
+                          <label>
+                              <h5><span class="badge badge-info">影片連結(Youtube)</span></h5>
                           </label>
                           {{ post_form.video_link }}
                         </div>
                       </div>
                       <hr>
-                      {% if target_team.stu_check != True %}
+{#                      {% if target_team.stu_check != True %}#}
                       <button type="submit" class="btn btn-outline-info mb-1">
                           <i class="far fa-check-circle pr-05"></i>送出
                       </button>
-                      {% endif %}
+{#                      {% endif %}#}
                 </form>
             </div>
         </div>
@@ -141,19 +160,19 @@
         "pdf1": "",
         "pdf2": "",
     };
-    {% if files.readme and files.affidavit %}
+    {% if files.readme and files.present %}
         var pdf1_url = "{{ files.readme.url }}";
-        var pdf2_url = "{{ files.affidavit.url }}";
+        var pdf2_url = "{{ files.present.url }}";
     {% elif files.readme %}
         var pdf1_url = "{{ files.readme.url }}";
-    {% elif files.affidavit %}
-        var pdf2_url = "{{ files.affidavit.url }}";
+    {% elif files.present %}
+        var pdf2_url = "{{ files.present.url }}";
     {% else %}
 
     {% endif %}
 
     window.onload = function(){
-        {% if files.readme and files.affidavit %}
+        {% if files.readme and files.present %}
             pdfHTML('pdf1');
             pdfBox('pdf1',1);
             pdfHTML('pdf2');
@@ -161,7 +180,7 @@
         {% elif files.readme %}
             pdfHTML('pdf1');
             pdfBox('pdf1',1);
-        {% elif files.affidavit %}
+        {% elif files.present %}
             pdfHTML('pdf2');
             pdfBox('pdf2',1);
         {% else %}

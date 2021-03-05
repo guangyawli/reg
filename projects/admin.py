@@ -1,5 +1,5 @@
 from django.contrib import admin
-from projects.models import TeamScore, JudgerProfile
+from projects.models import TeamScore, JudgerProfile, FinalTeamScore
 
 
 class TeamScoreAdmin(admin.ModelAdmin):
@@ -15,5 +15,15 @@ class JudgerProfileAdmin(admin.ModelAdmin):
     ordering = ('judger_group',)
 
 
+class FinalTeamScoreAdmin(admin.ModelAdmin):
+    list_display = ('team', 'score_applicability', 'score_creativity', 'score_challenge', 'score_completion',
+                    'total_score')
+    list_filter = ('team',)
+    ordering = ('team', 'total_score')
+
+
 admin.site.register(TeamScore, TeamScoreAdmin)
 admin.site.register(JudgerProfile, JudgerProfileAdmin)
+admin.site.register(FinalTeamScore, FinalTeamScoreAdmin)
+
+

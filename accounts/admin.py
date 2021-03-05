@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 
 
 class UserAdmin(UserAdmin):
-    list_display = ('username', 'email', 'date_joined')
+    list_display = ('username', 'email', 'date_joined', 'last_login')
 
 
 class UserProfileAdmin(admin.ModelAdmin):

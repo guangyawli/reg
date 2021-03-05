@@ -12,6 +12,13 @@ from django.contrib.auth.models import User
 #     ext = filename.split('.')[-1]
 #     filename = '{}.{}'.format(uuid.uuid4().hex[:10], ext)
 #     return os.path.join("readme_files", filename)
+def present_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_<username>/<filename>
+    today = datetime.now()
+    ext = filename.split('.')[-1]
+    filename = '{}{}.{}'.format(instance.team_name, today, ext)
+    return os.path.join("present_files", filename)
+
 
 def user_readme_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<username>/<filename>
@@ -43,6 +50,9 @@ class Team(models.Model):
                                  validators=[validators.FileExtensionValidator(['pdf'], message='必須為pdf格式')])
     team_group = models.CharField(max_length=10, blank=True, verbose_name='組別')
     stu_check = models.BooleanField(default=False)
+    ppt_link = models.URLField(blank=True, verbose_name='簡報')
+    present = models.FileField(upload_to=present_path, blank=True, verbose_name='海報',
+                               validators=[validators.FileExtensionValidator(['pdf'], message='必須為pdf格式')])
 
     def __str__(self):
         return self.team_name
