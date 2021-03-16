@@ -24,18 +24,18 @@ def rated_projects(request):
 @login_required
 def judge_list(request):
     if request.user.is_superuser or request.user.judgerprofile.check_judger:
-        if not JudgerProfile.objects.filter(user=request.user):
-            JudgerProfile.objects.get_or_create(user=request.user, judger_realname=request.user.username)
-
         if request.user.is_superuser:
             target_teams = Team.objects.filter(stu_check=True).exclude(team_group=None).order_by('id')
-            # for target_team in target_teams:
-            #     target_score = TeamScore.objects.filter(team__team_name=target_team.team_name,
-            #                                             judger_name='superuser')
-            #     if not target_score:
-            #         TeamScore.objects.get_or_create(team=target_team,
-            #                                         judger_name='superuser')
+            for target_team in target_teams:
+                target_score = TeamScore.objects.filter(team__team_name=target_team.team_name,
+                                                        judger_name='superuser')
+                # if not target_score:
+                #     TeamScore.objects.get_or_create(team=target_team,
+                #                                     judger_name='superuser')
         else:
+            if not JudgerProfile.objects.filter(user=request.user):
+                JudgerProfile.objects.get_or_create(user=request.user, judger_realname=request.user.username)
+
             target_teams = Team.objects.filter(team_group=request.user.judgerprofile.judger_group).order_by('id')
             for target_team in target_teams:
                 target_score = TeamScore.objects.filter(team__team_name=target_team.team_name,
@@ -48,6 +48,25 @@ def judge_list(request):
                                                                  'coding101_url': request.get_host()})
     else:
         return redirect('home')
+
+
+
+@login_required
+def judge_member(request):
+    all_member = ''
+    if request.user.is_superuser :
+        target_teams = Team.objects.order_by('id')
+        for target_team in target_teams:
+            target_members = TeamMember.objects.filter(team=target_team)
+            for target_member in target_members:
+                all_member += '<tr><td>' + target_team.team_name +'</td><td>' + target_member.member_name +'</td><td>' \
+                              + target_member.school_name + target_member.department_name + str(target_member.department_grade) + '年級</td></tr>'
+
+        return render(request, 'projects/judge_team_member.html', locals())
+    else:
+        return redirect('home')
+
+
 
 
 @login_required
@@ -189,31 +208,47 @@ def judge_detail(request, judge_id):
 @login_required
 def super_list(request):
     if request.user.is_superuser:
-        if not JudgerProfile.objects.filter(user=request.user):
-            JudgerProfile.objects.get_or_create(user=request.user, judger_realname=request.user.username)
+        # if not JudgerProfile.objects.filter(user=request.user):
+        #     JudgerProfile.objects.get_or_create(user=request.user, judger_realname=request.user.username)
         wrong_ids = []
         target_teams = Team.objects.filter(stu_check=True).exclude(team_group=None).order_by('id')
         for target_team in target_teams:
-            target_final, cflag = FinalTeamScore.objects.get_or_create(team=target_team)
+            target_final = FinalTeamScore.objects.get(team=target_team)
             score_data = TeamScore.objects.filter(team=target_team)
 
-            if score_data.count() == 2:
-                target_final.score_applicability = ((float(score_data[0].score_applicability) +
-                                                    float(score_data[1].score_applicability)) / 2)
-                target_final.score_creativity = ((float(score_data[0].score_creativity) +
-                                                 float(score_data[1].score_creativity)) / 2)
-                target_final.score_challenge = ((float(score_data[0].score_challenge) +
-                                                float(score_data[1].score_challenge)) / 2)
-                target_final.score_completion = ((float(score_data[0].score_completion) +
-                                                 float(score_data[1].score_completion)) / 2)
+            if score_data.count() == 0:
+                wrong_ids.append(target_team.team_name)
+            elif score_data.count() == 5:
+                target_final.score_applicability = (float(score_data[0].score_applicability) +
+                                                    float(score_data[1].score_applicability) +
+                                                    float(score_data[2].score_applicability) +
+                                                    float(score_data[3].score_applicability) +
+                                                    float(score_data[4].score_applicability)
+                                                    ) / 5
+
+                target_final.score_creativity = (float(score_data[0].score_creativity) +
+                                                 float(score_data[1].score_creativity) +
+                                                 float(score_data[2].score_creativity) +
+                                                 float(score_data[3].score_creativity) +
+                                                 float(score_data[4].score_creativity)
+                                                 ) / 5
+                target_final.score_challenge = (float(score_data[0].score_challenge) +
+                                                float(score_data[1].score_challenge) +
+                                                float(score_data[2].score_challenge) +
+                                                float(score_data[3].score_challenge) +
+                                                float(score_data[4].score_challenge)
+                                                ) / 5
+                target_final.score_completion = (float(score_data[0].score_completion) +
+                                                 float(score_data[1].score_completion) +
+                                                 float(score_data[2].score_completion) +
+                                                 float(score_data[3].score_completion) +
+                                                 float(score_data[4].score_completion)
+                                                 ) / 5
                 target_final.total_score = target_final.score_applicability+target_final.score_creativity + \
                                            target_final.score_challenge+target_final.score_completion
                 target_final.save()
-            elif score_data.count() == 0:
-                wrong_ids.append(target_team.team_name)
-        # print(wrong_ids)
-        # if wrong_ids:
-        #     messages.add_message(request, messages.ERROR, wrong_ids)
+
+
         final_teams = FinalTeamScore.objects.all()
         return render(request, 'projects/super_team_list.html', {'target_teams': final_teams,
                                                                  'coding101_url': request.get_host(),

@@ -5,8 +5,8 @@ from .models import Team, TeamMember
 
 
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('team_name', 'team_topic', 'team_school', 'team_teacher', 'leader', 'readme', 'affidavit',
-                    'video_link', 'team_group', 'stu_check', 'ppt_link', 'present')
+    list_display = ('team_name', 'team_topic', 'team_school', 'team_teacher', 'leader', 'readme', 'present',
+                    'video_link', 'team_group', 'stu_check', 'ppt_link', 'affidavit')
     list_filter = ("team_group", 'stu_check', "team_school")
     search_fields = ("team_name", "team_teacher", 'leader__username')
     ordering = ("team_name", "team_group", 'stu_check')

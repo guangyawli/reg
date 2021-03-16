@@ -161,9 +161,13 @@
                                role="tab" aria-controls="v-pills-profile" aria-selected="false">
                                 <h5><span class="badge badge-secondary">作品影片</span></h5>
                             </a>
+                            <a class="nav-link" id="v-pills-ppt-tab" data-toggle="pill" href="#v-pills-ppt"
+                               role="tab" aria-controls="v-pills-ppt" aria-selected="false">
+                                <h5><span class="badge badge-secondary">作品簡報</span></h5>
+                            </a>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-8">
                         <div class="tab-content" id="v-pills-tabContent">
                             <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
                                  aria-labelledby="v-pills-home-tab">
@@ -188,6 +192,20 @@
                                     </div>
                                 {% else %}
                                     <p class="sub_title">隊伍未上傳影片</p>
+                                {% endif %}
+                            </div>
+                            <div class="tab-pane fade" id="v-pills-ppt" role="tabpanel"
+                                 aria-labelledby="v-pills-profile-tab">
+                                {% if files.ppt_link %}
+                                    <a href="{{ files.ppt_link }}">另開視窗(或檔案無法瀏覽)</a>
+                                    {% ppt_url files.ppt_link as ppt_embed_link %}
+                                    <div class="youtube_container" style="width: 100%">
+                                        <iframe src="{{ ppt_embed_link }}" frameborder="0" height="480px" width="100%"
+                                                allowfullscreen="true" mozallowfullscreen="true"
+                                                webkitallowfullscreen="true"></iframe>
+                                    </div>
+                                {% else %}
+                                    <p class="sub_title">隊伍簡報內嵌有誤，請評審至 <a href="{{ files.ppt_link }}">這裡</a>瀏覽簡報</p>
                                 {% endif %}
                             </div>
                         </div>
@@ -219,7 +237,8 @@
                             {% for target_member in target_members %}
                                 {% if forloop.first %}
                                     <a href="mailto:{{ target_member.email_addr }}">{{ target_member.email_addr }}</a>
-                                    <br><div>{{ target_member.phone_number }}</div>
+                                    <br>
+                                    <div>{{ target_member.phone_number }}</div>
                                 {% endif %}
                             {% endfor %}
                         </div>
@@ -236,22 +255,7 @@
                         </div>
                     </div>
                     <p class="sub_title" style="padding-top: 10px;width: 100%;text-align: center">
-                        ------------------------信件系統------------------------</p>
-                    <h5><span class="badge badge-secondary">信件紀錄</span></h5>
-                    {% for lastmail in last_mails %}
-                        <p style="margin-bottom: 2px"><span class="badge badge-info"
-                                 style="margin-right: 5px">{{ lastmail.e_time }}</span>{{ lastmail.e_content }}</p>
 
-                    {% endfor %}
-                    <form method="post" enctype="multipart/form-data" id="judge_form3">
-                        {% csrf_token %}
-                        {% for field in mail_leader_form %}
-                            <h5><label for="{{ field.auto_id }}"><span
-                                    class="badge badge-secondary">{{ field.label }}</span></label></h5>
-                            {{ field }}
-                        {% endfor %}
-                        <button type="submit" class="btn btn-outline-info btn-sm">送出信件</button>
-                    </form>
                 </div>
             {% endif %}
 
@@ -267,40 +271,20 @@
         {#-------------開始時載入pdf-------------#}
         let pdf_current_page = {
             "pdf1": "1",
-            "pdf2": "1",
         };
 
         let pdf_total_page = {
             "pdf1": "",
-            "pdf2": "",
         };
-        {% if files.readme and files.affidavit %}
-            var pdf1_url = "{{ files.readme.url }}";
-            var pdf2_url = "{{ files.affidavit.url }}";
-        {% elif files.readme %}
-            var pdf1_url = "{{ files.readme.url }}";
-        {% elif files.affidavit %}
-            var pdf2_url = "{{ files.affidavit.url }}";
-        {% else %}
-
+        {% if files.readme %}
+        var pdf1_url = "{{ files.readme.url }}";
         {% endif %}
 
         window.onload = function () {
-            {% if files.readme and files.affidavit %}
+            {% if files.readme %}
                 pdfHTML('pdf1');
                 pdfBox('pdf1', 1);
-                pdfHTML('pdf2');
-                pdfBox('pdf2', 1);
-            {% elif files.readme %}
-                pdfHTML('pdf1');
-                pdfBox('pdf1', 1);
-            {% elif files.affidavit %}
-                pdfHTML('pdf2');
-                pdfBox('pdf2', 1);
-            {% else %}
-
             {% endif %}
-
         };
 
 
@@ -322,7 +306,6 @@
             } else {
                 timeout = false;
                 pdfBox('pdf1', parseInt(pdf_current_page['pdf1']));
-                pdfBox('pdf2', parseInt(pdf_current_page['pdf2']));
             }
         }
 
